@@ -1,5 +1,10 @@
-/* Runwrk marketing site: tiny vanilla JS (menu + counters). No libraries. */
+/* Runwrk marketing site: tiny vanilla JS (menu, light/dark, back to top, counters). No libraries. */
 (function () {
+    var root = document.documentElement;
+
+    // Smooth colour changes only after first paint, so the page never flashes on load.
+    setTimeout(function () { root.classList.add('rw-ready'); }, 60);
+
     var burger = document.querySelector('.rw-burger');
     var menu = document.getElementById('rw-menu');
     if (burger && menu) {
@@ -7,6 +12,24 @@
             var open = menu.classList.toggle('open');
             burger.setAttribute('aria-expanded', open);
         });
+    }
+
+    var toggle = document.querySelector('.rw-theme');
+    if (toggle) {
+        toggle.addEventListener('click', function () {
+            var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', next);
+            root.setAttribute('data-bs-theme', next);
+            try { localStorage.setItem('rw-site-theme', next); } catch (e) {}
+        });
+    }
+
+    var top = document.querySelector('.rw-top');
+    if (top) {
+        var toggleTop = function () { top.classList.toggle('show', window.scrollY > 500); };
+        window.addEventListener('scroll', toggleTop, { passive: true });
+        toggleTop();
+        top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
     }
 
     var nums = document.querySelectorAll('[data-count]');

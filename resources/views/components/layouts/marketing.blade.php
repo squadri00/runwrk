@@ -17,6 +17,7 @@
     <link rel="canonical" href="{{ $canonical }}">
     @if ($noindex)<meta name="robots" content="noindex">@endif
     <meta name="theme-color" content="#525fe1">
+    <script>(function(){var d=document.documentElement,t='light';try{t=localStorage.getItem('rw-site-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');}catch(e){}d.setAttribute('data-theme',t);d.setAttribute('data-bs-theme',t);})();</script>
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="{{ config('app.name') }}">
     <meta property="og:title" content="{{ $fullTitle }}">
@@ -48,6 +49,10 @@
                 <a class="rw-signin" href="{{ route('login') }}">Sign in</a>
             @endauth
             <a class="btn_one rw-cta" href="{{ route('contact') }}">Get started</a>
+            <button class="rw-theme" type="button" aria-label="Switch between light and dark mode" title="Light / dark mode">
+                <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/></svg>
+                <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+            </button>
         </nav>
     </div>
 </header>
@@ -101,6 +106,10 @@
         <div class="footer_copyright"><p>&copy; {{ date('Y') }} {{ config('app.name') }}, a product of {{ $parent['name'] }}. All rights reserved.</p></div>
     </div>
 </footer>
+
+<button class="rw-top" type="button" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 
 <script src="/assets/site/js/site.js" defer></script>
 @stack('scripts')

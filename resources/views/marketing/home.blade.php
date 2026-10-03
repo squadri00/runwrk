@@ -5,6 +5,7 @@
         <div class="container">
             <div class="row align-items-center gy-5 gx-lg-5">
                 <div class="col-lg-6">
+                    <a href="{{ route('web-design') }}" class="rw-pill"><b>OFFER</b> Website, first year ${{ $w['price'] }} <span aria-hidden="true">&rarr;</span></a>
                     <h1>A website you can <span>edit yourself.</span> An app your customers keep.</h1>
                     <p class="lead">We build fast, good-looking websites for small businesses in {{ $w['turnaround'] }}. Then we give you your own app, so you can send a message to all your customers' phones, any time you like.</p>
                     <div class="btns">
@@ -12,11 +13,12 @@
                         <a class="btn_line" href="{{ route('demo') }}">Try the app demo</a>
                     </div>
                     <div class="chips">
-                        <span>Free domain, hosting and SSL for year one</span>
+                        <span>Free domain, hosting and SSL in year one</span>
                         <span>No hidden fees</span>
+                        <span>You own the code</span>
                     </div>
                 </div>
-                <div class="col-lg-6">@include('marketing._hero-art')</div>
+                <div class="col-lg-6 rw-hero-art">@include('marketing._hero-art')</div>
             </div>
         </div>
     </section>
@@ -24,8 +26,9 @@
     <section class="rw-section">
         <div class="container">
             <div class="rw-head">
-                <h2>What we do for you</h2>
-                <p>Two simple things that help a small business get found and stay in touch with customers.</p>
+                <span class="eyebrow">What we do</span>
+                <h2>Two simple ways to grow your business</h2>
+                <p>Get found online, then stay in touch with the customers you already have.</p>
             </div>
             <div class="row g-4">
                 <div class="col-md-6">
@@ -59,11 +62,34 @@
         </div>
     </section>
 
+    <section class="rw-section soft">
+        <div class="container">
+            <div class="rw-head">
+                <span class="eyebrow">Built for small business</span>
+                <h2>Everything your website needs, nothing it does not</h2>
+                <p>Professional from day one, and simple enough to run yourself.</p>
+            </div>
+            <div class="row g-4">
+                @foreach ([
+                    ['ti-pencil-alt', 'Easy to edit', 'Change text, photos and pages yourself. No code, no waiting.'],
+                    ['ti-bolt', 'Built to be fast', 'Designed to pass Google\'s speed test, so visitors stay.'],
+                    ['ti-mobile', 'Great on every screen', 'Looks right on phones, tablets and computers.'],
+                    ['ti-search', 'Ready for Google', 'SEO set up, so people can find your business.'],
+                    ['ti-lock', 'Safe and secure', 'Free SSL gives your visitors the padlock they look for.'],
+                    ['ti-layout-slider', 'Ready-made sections', 'Galleries, accordions, cards, counters and more, one click away.'],
+                ] as [$icon, $h, $p])
+                    <div class="col-md-6 col-lg-4"><div class="rw-tile"><div class="ico"><span class="{{ $icon }}"></span></div><div><h4>{{ $h }}</h4><p>{{ $p }}</p></div></div></div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     <section class="rw-section">
         <div class="container">
             <div class="row align-items-center gy-5 gx-lg-5">
                 <div class="col-lg-6">
                     <div class="rw-head text-start mx-0 mb-3">
+                        <span class="eyebrow">Fair prices</span>
                         <h2>Agencies charge thousands. You pay ${{ $w['price'] }}.</h2>
                     </div>
                     <p>Many web design companies charge thousands of dollars for a simple website, then charge again every time you want a small change. We do it differently.</p>
@@ -95,9 +121,32 @@
     </section>
 
     <section class="rw-section soft">
+        <div class="container" style="max-width: 920px">
+            <div class="rw-head">
+                <span class="eyebrow">Side by side</span>
+                <h2>How we compare</h2>
+                <p>What you usually get from an agency, and what you get from us.</p>
+            </div>
+            <div class="table-responsive">
+                <table class="rw-compare">
+                    <thead><tr><th></th><th>Typical agency</th><th class="us">Runwrk</th></tr></thead>
+                    <tbody>
+                        <tr><td>First-year price</td><td>Often thousands of dollars</td><td class="us">${{ $w['price'] }}, everything included</td></tr>
+                        <tr><td>Domain and hosting</td><td>Usually billed separately</td><td class="us">Free in year one</td></tr>
+                        <tr><td>Small changes</td><td>Often an extra charge each time</td><td class="us">Do them yourself, any time</td></tr>
+                        <tr><td>Your source code</td><td>Often kept by the agency</td><td class="us">Yours to keep</td></tr>
+                        <tr><td>Time to launch</td><td>Often weeks or months</td><td class="us">{{ ucfirst($w['turnaround']) }}</td></tr>
+                        <tr><td>Messages to customers' phones</td><td>Rarely offered</td><td class="us">Available with your own app</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section class="rw-section">
         <div class="container">
-            <div class="rw-head"><h2>How it works</h2><p>Three easy steps from hello to live website.</p></div>
-            <div class="row g-4 rw-steps">
+            <div class="rw-head"><span class="eyebrow">How it works</span><h2>From hello to live in three steps</h2><p>You send the content. We do the rest.</p></div>
+            <div class="row g-4 rw-steps three">
                 <div class="col-md-4 step"><div class="no">1</div><h3>Tell us about your business</h3><p>Send us your business details, photos and the text you want on each page.</p></div>
                 <div class="col-md-4 step"><div class="no">2</div><h3>We design it</h3><p>We build your website and send it to you to look at. You get 1 or 2 free revisions.</p></div>
                 <div class="col-md-4 step"><div class="no">3</div><h3>You go live</h3><p>In {{ $w['turnaround'] }} your site is online with your own domain. Log in and change anything, any time.</p></div>
@@ -110,7 +159,7 @@
             <div class="row align-items-center gy-5 gx-lg-5">
                 <div class="col-lg-6 order-lg-2">@include('marketing._phone')</div>
                 <div class="col-lg-6 order-lg-1">
-                    <div class="rw-head text-start mx-0 mb-3"><h2>Your own app. No app store needed.</h2></div>
+                    <div class="rw-head text-start mx-0 mb-3"><span class="eyebrow" style="color:#aeb4f0">Your own app</span><h2>No app store needed.</h2></div>
                     <p>Your customers open a link and add your app to their phone. Your logo sits on their home screen like any other app. Then you can send a message to all of them, any time.</p>
                     <ul class="rw-list mt-3">
                         <li><b>Today's special</b> or a new product</li>
@@ -126,7 +175,7 @@
 
     <section class="rw-section">
         <div class="container" style="max-width: 820px">
-            <div class="rw-head"><h2>Questions? Here are quick answers.</h2></div>
+            <div class="rw-head"><span class="eyebrow">Questions</span><h2>Quick answers</h2></div>
             @include('marketing._faq', ['items' => [
                 ['Do I need to know how to code?', 'No. Your website comes with a simple back end. You log in, click on the text or picture you want to change, and save. If you can use email, you can use it.'],
                 ['How long does it take?', 'Usually '.$w['turnaround'].' after we have your content (your text, photos and business details).'],
@@ -140,7 +189,8 @@
         <div class="container">
             <h2>Ready to get started?</h2>
             <p class="mb-4">Tell us about your business and we will reply by email.</p>
-            <a class="btn_one" href="{{ route('contact') }}">Contact us</a>
+            <a class="btn_one me-2" href="{{ route('contact') }}">Contact us</a>
+            <a class="btn_line" href="{{ route('pricing') }}">See prices</a>
         </div>
     </section>
 </x-layouts.marketing>

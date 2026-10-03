@@ -192,6 +192,25 @@ class MarketingSiteTest extends TestCase
         }
     }
 
+    public function test_every_page_has_the_theme_switch_back_to_top_and_no_flash_script(): void
+    {
+        foreach (self::PAGES as $path) {
+            $html = $this->get($path)->getContent();
+
+            $this->assertStringContainsString('class="rw-theme"', $html, $path);
+            $this->assertStringContainsString('class="rw-top"', $html, $path);
+            $this->assertStringContainsString("localStorage.getItem('rw-site-theme')", $html, $path);
+            $this->assertLessThan(strpos($html, 'rel="stylesheet"'), strpos($html, "setAttribute('data-theme'"), "$path theme must be set before CSS loads");
+        }
+
+        $css = file_get_contents(public_path('assets/site/css/runwrk-site.css'));
+        $this->assertStringContainsString('html[data-theme="dark"]', $css);
+        $js = file_get_contents(public_path('assets/site/js/site.js'));
+        foreach (['rw-site-theme', '.rw-top', 'scrollTo'] as $needle) {
+            $this->assertStringContainsString($needle, $js);
+        }
+    }
+
     public function test_navigation_links_every_page_and_signed_in_owners_see_their_dashboard(): void
     {
         $html = $this->get('/')->getContent();

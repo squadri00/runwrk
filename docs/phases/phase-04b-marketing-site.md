@@ -18,6 +18,13 @@ Built from the ThemeWagon "Eduleb" template.
 - Speed: 8 requests, about 120 KB on the home page, no jQuery, no carousel or animation libraries, no large images (pictures are inline SVG/CSS).
 - Footer: "Runwrk is a product of Eformics Systems" with link to eformics.com.
 
+## Polish round (homepage, light/dark, back to top)
+- Homepage redesign: offer pill, gradient headline, soft background glow, trust ticks, "built for small business" feature tiles, side-by-side comparison table (typical agency vs Runwrk, hedged wording), dashed-line steps, gradient call-to-action band.
+- **Light / dark mode** on every page: sun/moon switch in the header, remembers the choice, follows the visitor's system setting the first time, no flash on load. Footer and banners stay dark in both modes.
+- **Back to top** button appears after scrolling and glides to the top.
+- Fixed along the way: footer text colours, the theme forcing FAQ colours, and contrast problems found by an automated check (1,142 text items on all 8 pages in both modes, none under 4.4:1; text over gradients not measured).
+- Verified in a real browser: switching, saving, colours in both modes, back-to-top logic. Not verified: the smooth-scroll animation itself (my preview pane does not run animation frames).
+
 ## Decisions and why
 | Decision | Why |
 |---|---|
@@ -28,7 +35,7 @@ Built from the ThemeWagon "Eduleb" template.
 | Footer has no phone, email or address | Not provided; add when you have them |
 | Privacy and Terms are short plain-English drafts | **Need a lawyer's review** (CASL/privacy, refund and service terms) before launch |
 | Demo page left almost blank | As requested |
-| Light mode only | Dark mode is for customer sites |
+| Light and dark mode, chosen by a header switch | Requested; remembers the choice and follows the system setting the first time |
 | No mention of the underlying platform (Grav) anywhere | Tested by `test_site_never_uses_technical_words…` |
 
 ## Files
