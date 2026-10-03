@@ -62,7 +62,7 @@ unset($__defined_vars, $__key, $__value); ?>
     <link rel="stylesheet" href="/assets/site/css/runwrk-site.css?v=<?php echo e(filemtime(public_path('assets/site/css/runwrk-site.css'))); ?>">
     <?php echo $__env->yieldPushContent('head'); ?>
 </head>
-<body>
+<body class="<?php echo e(request()->routeIs('home') ? '' : 'rw-dark-top'); ?>">
 <header class="rw-nav">
     <div class="container rw-nav-in">
         <a class="rw-logo" href="<?php echo e(url('/')); ?>"><span class="rw-mark">R</span><?php echo e(config('app.name')); ?></a>

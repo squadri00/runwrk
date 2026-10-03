@@ -5,11 +5,17 @@
     // Smooth colour changes only after first paint, so the page never flashes on load.
     setTimeout(function () { root.classList.add('rw-ready'); }, 60);
 
+    var nav = document.querySelector('.rw-nav');
+    var syncNav = function () { if (nav) { nav.classList.toggle('scrolled', window.scrollY > 8); } };
+    window.addEventListener('scroll', syncNav, { passive: true });
+    syncNav();
+
     var burger = document.querySelector('.rw-burger');
     var menu = document.getElementById('rw-menu');
     if (burger && menu) {
         burger.addEventListener('click', function () {
             var open = menu.classList.toggle('open');
+            if (nav) { nav.classList.toggle('menu-open', open); }
             burger.setAttribute('aria-expanded', open);
         });
     }

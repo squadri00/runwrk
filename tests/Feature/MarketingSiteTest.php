@@ -250,6 +250,23 @@ class MarketingSiteTest extends TestCase
         $this->assertSame(3, substr_count($html, 'class="rw-orb '));
     }
 
+    public function test_nav_is_transparent_at_the_top_and_solid_when_scrolled(): void
+    {
+        $css = file_get_contents(public_path('assets/site/css/runwrk-site.css'));
+        $js = file_get_contents(public_path('assets/site/js/site.js'));
+
+        $this->assertMatchesRegularExpression('/\.rw-nav \{ position: fixed;[^}]*background: transparent/', $css);
+        $this->assertStringContainsString('.rw-nav.scrolled', $css);
+        $this->assertStringContainsString('--rw-nav-bg: rgba(255', $css);
+        $this->assertStringContainsString('--rw-nav-bg: rgba(15', $css);
+        $this->assertStringContainsString("classList.toggle('scrolled'", $js);
+
+        foreach (['/pricing', '/web-design', '/contact'] as $p) {
+            $this->assertStringContainsString('<body class="rw-dark-top">', $this->get($p)->getContent(), $p);
+        }
+        $this->assertStringContainsString('<body class="">', $this->get('/')->getContent());
+    }
+
     public function test_every_page_has_the_theme_switch_back_to_top_and_no_flash_script(): void
     {
         foreach (self::PAGES as $path) {

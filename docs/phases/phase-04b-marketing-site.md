@@ -33,6 +33,12 @@ Built from the ThemeWagon "Eduleb" template.
 - Link parsing accepts only real YouTube links (watch, youtu.be, embed, shorts) or an 11-character video ID; anything else is rejected.
 - Verified in a real browser: all animations running, play button creates the embed at the right size, no YouTube requests before play. Hero text contrast was not measured over the gradient, so I darkened the lightest gradient stop and softened the pink glow behind the text; please look at it on your phone.
 
+## Transparent navigation
+- The top nav is **transparent** over the hero (and over the banner on inner pages). After scrolling a few pixels it becomes a frosted, slightly see-through bar with a soft shadow, and stays fixed at the top.
+- Works in light and dark mode: dark text on the light hero, light text in dark mode; on inner pages (dark banner) the transparent nav shows white text, then switches to normal colours once solid.
+- On phones the menu opens as a solid panel so links stay readable.
+- Verified in a real browser for home and an inner page, in both modes, plus the phone menu. Real scroll events do not fire in my hidden preview pane, so I triggered them by script; please scroll the page yourself once.
+
 ## Decisions and why
 | Decision | Why |
 |---|---|

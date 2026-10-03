@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="/assets/site/css/runwrk-site.css?v={{ filemtime(public_path('assets/site/css/runwrk-site.css')) }}">
     @stack('head')
 </head>
-<body>
+<body class="{{ request()->routeIs('home') ? '' : 'rw-dark-top' }}">
 <header class="rw-nav">
     <div class="container rw-nav-in">
         <a class="rw-logo" href="{{ url('/') }}"><span class="rw-mark">R</span>{{ config('app.name') }}</a>
