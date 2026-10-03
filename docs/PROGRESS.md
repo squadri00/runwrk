@@ -1,0 +1,16 @@
+# Progress
+
+| Phase | Name | Status | Date |
+|---|---|---|---|
+| 0 | Discovery and architecture | Awaiting approval | 2026-10-02 |
+| 1 | Foundation | Not started | |
+| 2 | Super admin | Not started | |
+| 3 | Owner admin | Not started | |
+| 4 | Push engine + hosted app | Not started | |
+| 5 | Connectors (snippet, Grav plugin) | Not started | |
+| 6 | First deploy + Hoshmint pilot | Not started | |
+| 7 | Barber & salon module + demo | Not started | |
+| 8 | Marketing site + billing | Not started | |
+| 9 | Sales tools | Not started | |
+| 10 | Hardening & QA | Not started | |
+| 11 | Production go-live | Not started | |
