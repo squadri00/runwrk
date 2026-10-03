@@ -18,3 +18,5 @@
 /storage/backups
 /vendor
 Thumbs.db
+
+*.zip

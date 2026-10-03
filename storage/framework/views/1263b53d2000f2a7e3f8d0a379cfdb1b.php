@@ -56,6 +56,7 @@ unset($__defined_vars, $__key, $__value); ?>
                     : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'); ?>
                 <a href="<?php echo e(route('admin.home')); ?>" class="block rounded-lg px-3 py-2 font-medium <?php echo e($saLink('admin.home')); ?>">Dashboard</a>
                 <a href="<?php echo e(route('admin.businesses.index')); ?>" class="block rounded-lg px-3 py-2 font-medium <?php echo e($saLink('admin.businesses.*')); ?>">Businesses</a>
+                <a href="<?php echo e(route('admin.messages.index')); ?>" class="flex items-center justify-between rounded-lg px-3 py-2 font-medium <?php echo e($saLink('admin.messages.*')); ?>">Messages <?php if($unread = \App\Models\ContactMessage::whereNull('read_at')->count()): ?><span class="rounded-full bg-rose-600 px-2 text-xs text-white"><?php echo e($unread); ?></span><?php endif; ?></a>
                 <a href="<?php echo e(route('admin.plans.index')); ?>" class="block rounded-lg px-3 py-2 font-medium <?php echo e($saLink('admin.plans.*')); ?>">Plans &amp; pricing</a>
                 <a href="<?php echo e(route('admin.audit')); ?>" class="block rounded-lg px-3 py-2 font-medium <?php echo e($saLink('admin.audit')); ?>">Audit log</a>
                 <a href="<?php echo e(route('admin.settings.edit')); ?>" class="block rounded-lg px-3 py-2 font-medium <?php echo e($saLink('admin.settings.*')); ?>">Settings</a>

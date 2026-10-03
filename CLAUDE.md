@@ -48,3 +48,9 @@ Local logins (password `password`): `owner@demo.test`, `owner@hoshmint.test`; su
 - Subscribe endpoints must be on `runwrk.push.allowed_hosts` (SSRF guard). Never relax it.
 - VAPID: `runwrk:vapid-generate` / `runwrk:vapid-backup`, see `docs/VAPID-KEYS.md`. Never regenerate once customers subscribed.
 - Windows/XAMPP needs `OPENSSL_CONF` (use `dev-serve.cmd` or `scripts/dev-phone.ps1`); phone testing: `docs/PHONE-TESTING.md`.
+
+## Marketing site
+- Public pages: `SiteController` + `resources/views/marketing/*`, layout `<x-layouts.marketing>`. Template assets in `public/assets/site/` (Eduleb theme CSS + our `runwrk-site.css`, vanilla `site.js`; keep it jQuery-free and images small, tests enforce this).
+- Prices and offer wording live in `config/site.php`. App plans come from the `plans` table. Never use the words PWA/Grav/flat-file on customer-facing pages (test enforces).
+- Beware: Blade treats `@something` inside templates as a directive (broke JSON-LD `@context`); build such arrays in an `@php` block.
+- Contact messages: table `contact_messages`, admin at `/admin/messages`.

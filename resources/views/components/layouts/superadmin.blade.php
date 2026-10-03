@@ -28,6 +28,7 @@
                     : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800')
                 <a href="{{ route('admin.home') }}" class="block rounded-lg px-3 py-2 font-medium {{ $saLink('admin.home') }}">Dashboard</a>
                 <a href="{{ route('admin.businesses.index') }}" class="block rounded-lg px-3 py-2 font-medium {{ $saLink('admin.businesses.*') }}">Businesses</a>
+                <a href="{{ route('admin.messages.index') }}" class="flex items-center justify-between rounded-lg px-3 py-2 font-medium {{ $saLink('admin.messages.*') }}">Messages @if($unread = \App\Models\ContactMessage::whereNull('read_at')->count())<span class="rounded-full bg-rose-600 px-2 text-xs text-white">{{ $unread }}</span>@endif</a>
                 <a href="{{ route('admin.plans.index') }}" class="block rounded-lg px-3 py-2 font-medium {{ $saLink('admin.plans.*') }}">Plans &amp; pricing</a>
                 <a href="{{ route('admin.audit') }}" class="block rounded-lg px-3 py-2 font-medium {{ $saLink('admin.audit') }}">Audit log</a>
                 <a href="{{ route('admin.settings.edit') }}" class="block rounded-lg px-3 py-2 font-medium {{ $saLink('admin.settings.*') }}">Settings</a>

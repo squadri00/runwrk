@@ -47,7 +47,7 @@ class HostedAppTest extends TestCase
     public function test_unknown_suspended_and_reserved_slugs_are_404(): void
     {
         $this->get('/nobody-here')->assertNotFound();
-        $this->get('/terms')->assertNotFound();
+        $this->get('/stripe')->assertNotFound();
 
         $this->b->update(['status' => 'suspended']);
         foreach (['/joes-barber', '/joes-barber/manifest.webmanifest', '/joes-barber/sw.js', '/joes-barber/icons/icon-192.png'] as $url) {

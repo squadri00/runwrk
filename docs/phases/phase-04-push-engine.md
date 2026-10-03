@@ -1,6 +1,6 @@
 # Phase 04 — Push engine and hosted app
 
-Status: **awaiting approval** (needs your Android phone test)
+Status: **complete**
 
 ## Goal
 A customer opens the business's app page, installs it, turns on notifications, and the owner sends them a message from the dashboard.

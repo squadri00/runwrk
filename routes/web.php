@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AuditController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\BusinessController;
 use App\Http\Controllers\Admin\ImpersonationController;
+use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -23,7 +24,15 @@ use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [SiteController::class, 'home'])->name('home');
+Route::get('web-design', [SiteController::class, 'webDesign'])->name('web-design');
+Route::get('your-app', [SiteController::class, 'yourApp'])->name('your-app');
 Route::get('pricing', [SiteController::class, 'pricing'])->name('pricing');
+Route::get('demo', [SiteController::class, 'demo'])->name('demo');
+Route::get('contact', [SiteController::class, 'contact'])->name('contact');
+Route::post('contact', [SiteController::class, 'sendContact'])->middleware('throttle:5,1')->name('contact.send');
+Route::get('privacy', [SiteController::class, 'privacy'])->name('privacy');
+Route::get('terms', [SiteController::class, 'terms'])->name('terms');
+Route::get('sitemap.xml', [SiteController::class, 'sitemap'])->name('sitemap');
 
 Route::middleware('guest:web')->group(function () {
     Route::get('login', [LoginController::class, 'show'])->name('login');
@@ -54,6 +63,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('auth:superadmin')->group(function () {
         Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
         Route::get('/', [BusinessController::class, 'home'])->name('home');
+        Route::get('messages', [MessageController::class, 'index'])->name('messages.index');
+        Route::get('messages/{message}', [MessageController::class, 'show'])->name('messages.show');
+        Route::delete('messages/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
         Route::get('audit', [AuditController::class, 'index'])->name('audit');
 
         Route::get('businesses', [BusinessController::class, 'index'])->name('businesses.index');

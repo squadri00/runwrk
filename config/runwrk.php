@@ -4,7 +4,7 @@ return [
     'reserved_paths' => [
         'admin', 'login', 'logout', 'api', 'dashboard', 'pricing', 'assets',
         'signup', 'register', 'password', 'build', 'storage', 'up', 'privacy',
-        'terms', 'contact', 'demo', 'stripe', 'sw.js', 'manifest',
+        'terms', 'contact', 'demo', 'stripe', 'sw.js', 'manifest', 'web-design', 'your-app', 'sitemap.xml', 'robots.txt',
     ],
 
     'allow_local_origins' => (bool) env('RUNWRK_ALLOW_LOCAL_ORIGINS', env('APP_ENV') === 'local'),
