@@ -2,8 +2,8 @@
 
 | Phase | Name | Status | Date |
 |---|---|---|---|
-| 0 | Discovery and architecture | Awaiting approval | 2026-10-02 |
-| 1 | Foundation | Not started | |
+| 0 | Discovery and architecture | Complete | 2026-10-02 |
+| 1 | Foundation | Awaiting approval | 2026-10-02 |
 | 2 | Super admin | Not started | |
 | 3 | Owner admin | Not started | |
 | 4 | Push engine + hosted app | Not started | |

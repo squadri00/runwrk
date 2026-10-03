@@ -1,6 +1,6 @@
 # Phase 00 — Discovery and architecture
 
-Status: **awaiting approval**
+Status: **complete**
 
 ## Goal
 Agree on the architecture, data model, risks and phase plan before writing code.
