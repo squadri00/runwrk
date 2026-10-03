@@ -23,3 +23,10 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Shared scripts are updated centrally, so browsers must re-check them often.
+<IfModule mod_headers.c>
+    <FilesMatch "^(runwrk-connect|runwrk|sw-core)\.js$">
+        Header set Cache-Control "public, max-age=300, must-revalidate"
+    </FilesMatch>
+</IfModule>

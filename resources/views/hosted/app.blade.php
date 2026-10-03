@@ -116,7 +116,7 @@
         R.subscribe().then(function () { return null; }, function (e) { return e || new Error('failed'); }).then(function (err) {
             btn.disabled = false;
             return render().then(function () {
-                if (err) { note(err.message === 'denied' ? 'You chose not to allow notifications.' : 'Something went wrong. Please try again.'); }
+                if (err) { note(err.message === 'denied' ? 'You chose not to allow notifications.' : 'Something went wrong. Please try again. (' + (err.step || '?') + ': ' + String(err.name || '') + ' ' + String(err.message || '').slice(0, 110) + ')'); }
             });
         });
     };

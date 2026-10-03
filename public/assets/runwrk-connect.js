@@ -114,7 +114,7 @@
 
             var $ = function (id) { return panel.querySelector('#' + id); };
             if ($('c')) { $('c').onclick = function () { setOpen(false); try { localStorage.setItem(DISMISS, String(Date.now())); } catch (e) {} refresh(); }; }
-            if ($('on')) { $('on').onclick = function () { var b = this; b.disabled = true; R.subscribe().then(null, function (e) { return e; }).then(function (err) { return refresh().then(function () { if (err) { var m = panel.querySelector('#msg'); if (m) { m.textContent = err.message === 'denied' ? 'You chose not to allow notifications.' : 'Something went wrong. Please try again.'; m.hidden = false; } } }); }); }; }
+            if ($('on')) { $('on').onclick = function () { var b = this; b.disabled = true; R.subscribe().then(null, function (e) { return e; }).then(function (err) { return refresh().then(function () { if (err) { var m = panel.querySelector('#msg'); if (m) { m.textContent = err.message === 'denied' ? 'You chose not to allow notifications.' : 'Something went wrong. Please try again. (' + (err.step || '?') + ': ' + String(err.name || '') + ' ' + String(err.message || '').slice(0, 110) + ')'; m.hidden = false; } } }); }); }; }
             if ($('off')) { $('off').onclick = function () { R.unsubscribe().then(refresh); }; }
             if ($('inst')) { $('inst').onclick = function () { R.install().then(refresh); }; }
         }

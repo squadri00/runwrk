@@ -70,14 +70,25 @@
             }).then(function (sub) { s.subscribed = !!sub && s.permission === 'granted'; return s; });
         },
         subscribe: function () {
+            var step = 'service-worker';
             return registration().then(function (reg) {
+                step = 'permission';
                 return Notification.requestPermission().then(function (perm) {
                     if (perm !== 'granted') { throw new Error('denied'); }
+                    step = 'settings';
                     return api('/config', null, 'GET').then(function (conf) {
+                        step = 'push-service';
                         return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64ToBytes(conf.vapidPublicKey) });
                     });
                 });
-            }).then(function (sub) { return api('/subscribe', payload(sub)); });
+            }).then(function (sub) {
+                step = 'save';
+                return api('/subscribe', payload(sub));
+            }).catch(function (e) {
+                e.step = step;
+                if (window.console) { console.error('Runwrk: turning on notifications failed at step ' + step, e); }
+                throw e;
+            });
         },
         unsubscribe: function () {
             return navigator.serviceWorker.getRegistration(cfg.scope).then(function (reg) {

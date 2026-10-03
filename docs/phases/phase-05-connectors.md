@@ -43,7 +43,12 @@ php artisan test      # 145 tests (19 new: manifest, connect page, downloads, pl
 - In a real browser, over HTTPS, on a separate website address (hoshmint copy): button appears in the brand colour, manifest link added and served from the site's own address (scope `/`), all three icons load, worker `/runwrk-sw.js` registered and **activated** (cross-origin shared worker works), panel opens and reports the blocked-notifications state correctly.
 - The real worker file run in a simulated worker: images/scripts ignored, online pages pass through, offline pages get the offline screen, notification shown (and still shown for a broken payload), tap opens the right link and reports the click.
 - Grav plugin on your Grav 2.2.3 copy: both files served, manifest fetched from Runwrk, script injected once, admin untouched, wrong key gives a clean error with the page unharmed, empty key does nothing.
-- **Not verified**: actual notification delivery to a phone from a customer website, Chrome's install prompt, iPhone behaviour (this preview browser blocks notifications and install prompts), Mobirise's "custom code" spot, Google PageSpeed impact on a customer site (script is async and small).
+- **Verified on a real desktop (you)**: installed the app from the hoshmint test website, turned notifications on (subscriber saved as desktop via the website script), sent "New Hoshmint night" from the owner dashboard, and Runwrk recorded it as delivered (1 of 1).
+- **Not verified**: tapping the notification (opens the site, counts "Opened"), Android phone, iPhone, Mobirise's "custom code" spot, Google PageSpeed impact on a customer site (script is async and small).
+
+## Found while testing on your desktop
+- The first subscribe attempt failed silently with only a generic message. The library now records which step failed (`service-worker`, `permission`, `settings`, `push-service`, `save`) and the panel shows it in small text, so problems can be diagnosed in one round. The retry worked (most likely an old cached script).
+- Shared scripts now get a 5-minute cache lifetime (`public/.htaccess`) so fixes reach every connected website quickly.
 
 ## Known issues
 - The plugin is installed in your local Grav (`user/plugins/runwrk-connect`) with **no key set**, so it is switched off. I removed the test key.
