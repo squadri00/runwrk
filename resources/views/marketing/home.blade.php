@@ -2,6 +2,10 @@
 <x-layouts.marketing title="Runwrk: Simple websites and your own app for small businesses" description="A modern website for your small business for ${{ $w['price'] }} the first year, ready in about 1 week. Plus your own app to send a message to all your customers' phones.">
 
     <section class="rw-hero">
+        <div class="rw-orb o1" aria-hidden="true"></div>
+        <div class="rw-orb o2" aria-hidden="true"></div>
+        <div class="rw-orb o3" aria-hidden="true"></div>
+        <div class="rw-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="container">
             <div class="row align-items-center gy-5 gx-lg-5">
                 <div class="col-lg-6">
@@ -18,8 +22,38 @@
                         <span>You own the code</span>
                     </div>
                 </div>
-                <div class="col-lg-6 rw-hero-art">@include('marketing._hero-art')</div>
+                <div class="col-lg-6 rw-hero-art">
+                    @include('marketing._hero-art')
+                    <div class="rw-float f1" aria-hidden="true"><span class="ti-check"></span> Message sent</div>
+                    <div class="rw-float f2" aria-hidden="true"><span class="ti-bell"></span> New customer</div>
+                    <div class="rw-float f3" aria-hidden="true"><span class="ti-thumb-up"></span> Site is live</div>
+                </div>
             </div>
+        </div>
+    </section>
+
+    <section class="rw-video-section" id="intro">
+        <div class="container" style="max-width: 940px">
+            <div class="rw-head">
+                <span class="eyebrow">Watch</span>
+                <h2>See Runwrk in action</h2>
+                <p>A short video that shows what we do and how it works.</p>
+            </div>
+            @if ($videoId)
+                <div class="rw-video" data-video="{{ $videoId }}">
+                    <button type="button" class="rw-video-play" aria-label="Play the Runwrk intro video">
+                        <span class="ring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>
+                        <span class="label">Watch the intro</span>
+                    </button>
+                </div>
+            @else
+                <div class="rw-video empty">
+                    <div class="rw-video-play" role="img" aria-label="Intro video coming soon">
+                        <span class="ring"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>
+                        <span class="label">Intro video coming soon</span>
+                    </div>
+                </div>
+            @endif
         </div>
     </section>
 

@@ -25,6 +25,14 @@ Built from the ThemeWagon "Eduleb" template.
 - Fixed along the way: footer text colours, the theme forcing FAQ colours, and contrast problems found by an automated check (1,142 text items on all 8 pages in both modes, none under 4.4:1; text over gradients not measured).
 - Verified in a real browser: switching, saving, colours in both modes, back-to-top logic. Not verified: the smooth-scroll animation itself (my preview pane does not run animation frames).
 
+## Hero and intro video (second polish)
+- **New hero colours**: a slowly shifting navy, violet and teal gradient with white text (the same in light and dark mode), curved edge into the page.
+- **Moving elements**: three drifting glow orbs, twinkling dots, three floating status chips ("Message sent", "New customer", "Site is live"), the computer and phone gently bob, the notification bell rings now and then. All CSS only (no libraries). Turned off automatically for visitors who set "reduce motion".
+- **Intro video box** right under the hero (16:9, with a pulsing play button). Paste your YouTube link in **Super admin → Settings → Homepage intro video**. Until then it shows "Intro video coming soon".
+- Video is click-to-play: nothing from YouTube loads until the visitor presses play, then the privacy-friendly `youtube-nocookie.com` player opens. Keeps the page fast.
+- Link parsing accepts only real YouTube links (watch, youtu.be, embed, shorts) or an 11-character video ID; anything else is rejected.
+- Verified in a real browser: all animations running, play button creates the embed at the right size, no YouTube requests before play. Hero text contrast was not measured over the gradient, so I darkened the lightest gradient stop and softened the pink glow behind the text; please look at it on your phone.
+
 ## Decisions and why
 | Decision | Why |
 |---|---|

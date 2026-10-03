@@ -32,6 +32,20 @@
         top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
     }
 
+    // YouTube loads only when the visitor presses play (keeps the page fast and private).
+    document.querySelectorAll('.rw-video[data-video]').forEach(function (box) {
+        var btn = box.querySelector('.rw-video-play');
+        btn.addEventListener('click', function () {
+            var f = document.createElement('iframe');
+            f.src = 'https://www.youtube-nocookie.com/embed/' + box.getAttribute('data-video') + '?autoplay=1&rel=0&modestbranding=1';
+            f.title = 'Runwrk intro video';
+            f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+            f.allowFullscreen = true;
+            box.appendChild(f);
+            btn.remove();
+        });
+    });
+
     var nums = document.querySelectorAll('[data-count]');
     if (!nums.length || !('IntersectionObserver' in window)) { return; }
     var io = new IntersectionObserver(function (entries) {

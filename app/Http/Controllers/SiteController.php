@@ -20,7 +20,7 @@ class SiteController extends Controller
 
     public function home()
     {
-        return view('marketing.home', ['fromPrice' => $this->fromPrice()]);
+        return view('marketing.home', ['fromPrice' => $this->fromPrice(), 'videoId' => PlatformSettings::introVideoId()]);
     }
 
     public function webDesign()

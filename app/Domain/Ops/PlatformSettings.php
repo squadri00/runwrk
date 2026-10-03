@@ -20,6 +20,7 @@ class PlatformSettings
                 'mail_password_set' => Settings::get('mail.password') !== null,
                 'app_name' => Settings::get('app_name'),
                 'support_email' => Settings::get('support_email'),
+                'intro_video_url' => Settings::get('intro_video_url'),
                 'signups_enabled' => Settings::get('signups_enabled', true),
             ]);
         } catch (\Throwable) {
@@ -30,6 +31,26 @@ class PlatformSettings
     public static function forget(): void
     {
         Cache::forget('platform.settings');
+    }
+
+    public static function youtubeId(?string $input): ?string
+    {
+        $input = trim((string) $input);
+
+        if (preg_match('/^[A-Za-z0-9_-]{11}$/', $input)) {
+            return $input;
+        }
+
+        if (preg_match('~^https?://(?:www\.|m\.|music\.)?(?:youtube\.com|youtube-nocookie\.com|youtu\.be)/(?:watch\?(?:.*&)?v=|embed/|shorts/|live/|v/)?([A-Za-z0-9_-]{11})(?:[?&#/]|$)~', $input.'/', $m)) {
+            return $m[1];
+        }
+
+        return null;
+    }
+
+    public static function introVideoId(): ?string
+    {
+        return self::youtubeId(self::all()['intro_video_url'] ?? null);
     }
 
     public static function signupsEnabled(): bool

@@ -192,6 +192,64 @@ class MarketingSiteTest extends TestCase
         }
     }
 
+    public function test_homepage_video_box_shows_a_placeholder_until_a_youtube_link_is_set(): void
+    {
+        $this->get('/')->assertSee('Intro video coming soon')->assertDontSee('data-video', false);
+
+        Settings::put('intro_video_url', 'https://youtu.be/dQw4w9WgXcQ?si=x');
+        \App\Domain\Ops\PlatformSettings::forget();
+
+        $html = $this->get('/')->assertSee('data-video="dQw4w9WgXcQ"', false)->assertDontSee('coming soon')->getContent();
+        $this->assertStringNotContainsString('<iframe', $html, 'YouTube must not load until play is pressed');
+        $this->assertStringNotContainsString('youtube.com/embed', $html);
+        $this->assertStringContainsString('youtube-nocookie.com/embed/', file_get_contents(public_path('assets/site/js/site.js')));
+    }
+
+    public function test_video_section_comes_right_after_the_hero(): void
+    {
+        $html = $this->get('/')->getContent();
+
+        $this->assertLessThan(strpos($html, 'rw-video-section'), strpos($html, 'class="rw-hero"'));
+        $this->assertLessThan(strpos($html, 'class="rw-section"'), strpos($html, 'rw-video-section'));
+    }
+
+    public function test_youtube_links_are_parsed_strictly(): void
+    {
+        $ok = ['dQw4w9WgXcQ', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=5s', 'https://youtu.be/dQw4w9WgXcQ', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://youtube.com/shorts/dQw4w9WgXcQ', 'https://m.youtube.com/watch?v=dQw4w9WgXcQ'];
+        foreach ($ok as $u) {
+            $this->assertSame('dQw4w9WgXcQ', \App\Domain\Ops\PlatformSettings::youtubeId($u), $u);
+        }
+        foreach (['https://evil.com/watch?v=dQw4w9WgXcQ', 'https://youtube.com.evil.com/watch?v=dQw4w9WgXcQ', 'https://www.youtube.com/', 'javascript:alert(1)', '', '<script>', 'http://youtube.com/watch?v=short'] as $u) {
+            $this->assertNull(\App\Domain\Ops\PlatformSettings::youtubeId($u), $u);
+        }
+    }
+
+    public function test_admin_can_set_and_clear_the_video_link_and_bad_links_are_rejected(): void
+    {
+        $admin = Superadmin::create(['name' => 'Boss', 'email' => 'boss@runwrk.test', 'password' => 'secret-pass']);
+        $this->actingAs($admin, 'superadmin');
+
+        $this->put('/admin/settings', ['intro_video_url' => 'https://example.com/video.mp4'])->assertSessionHasErrors('intro_video_url');
+
+        $this->put('/admin/settings', ['intro_video_url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'])->assertSessionHasNoErrors();
+        $this->get('/')->assertSee('data-video="dQw4w9WgXcQ"', false);
+
+        $this->put('/admin/settings', ['intro_video_url' => ''])->assertSessionHasNoErrors();
+        $this->get('/')->assertSee('Intro video coming soon');
+    }
+
+    public function test_hero_motion_respects_reduced_motion_and_uses_cheap_animations(): void
+    {
+        $css = file_get_contents(public_path('assets/site/css/runwrk-site.css'));
+
+        $this->assertStringContainsString('prefers-reduced-motion: reduce', $css);
+        $this->assertStringContainsString('@keyframes rwShift', $css);
+        $this->assertStringContainsString('@keyframes rwFloat1', $css);
+        $html = $this->get('/')->getContent();
+        $this->assertSame(3, substr_count($html, 'class="rw-float '));
+        $this->assertSame(3, substr_count($html, 'class="rw-orb '));
+    }
+
     public function test_every_page_has_the_theme_switch_back_to_top_and_no_flash_script(): void
     {
         foreach (self::PAGES as $path) {

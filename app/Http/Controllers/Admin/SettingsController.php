@@ -22,6 +22,7 @@ class SettingsController extends Controller
         $data = $request->validate([
             'app_name' => 'nullable|string|max:60',
             'support_email' => 'nullable|email|max:190',
+            'intro_video_url' => ['nullable', 'string', 'max:200', fn ($a, $v, $fail) => blank($v) || PlatformSettings::youtubeId($v) ? null : $fail('Paste a YouTube link, for example https://www.youtube.com/watch?v=abc123XYZ_-')],
             'mail_host' => 'nullable|string|max:190',
             'mail_port' => 'nullable|integer|min:1|max:65535',
             'mail_encryption' => 'nullable|in:tls,ssl,none',
@@ -33,6 +34,7 @@ class SettingsController extends Controller
 
         Settings::put('app_name', $data['app_name'] ?? null);
         Settings::put('support_email', $data['support_email'] ?? null);
+        Settings::put('intro_video_url', $data['intro_video_url'] ?? null);
         Settings::put('signups_enabled', $request->boolean('signups_enabled'));
 
         foreach (PlatformSettings::MAIL as $key) {

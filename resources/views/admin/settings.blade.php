@@ -7,6 +7,7 @@
             <h2 class="text-sm font-semibold">General</h2>
             <x-field name="app_name" label="Platform name" :value="$s['app_name'] ?? null" hint="Shown in emails and page titles. Leave empty for the default." />
             <x-field name="support_email" label="Support email" type="email" :value="$s['support_email'] ?? null" />
+            <x-field name="intro_video_url" label="Homepage intro video (YouTube link)" :value="$s['intro_video_url'] ?? null" hint="Shown under the homepage hero. Leave empty to show a coming-soon box." />
             <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="signups_enabled" value="1" @checked(old('signups_enabled', $s['signups_enabled'] ?? true)) class="rounded border-slate-300"> Allow new businesses to sign up</label>
         </section>
 

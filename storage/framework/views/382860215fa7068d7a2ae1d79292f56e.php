@@ -5,7 +5,7 @@
         <filter id="hsh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#0b104a" flood-opacity=".18"/></filter>
     </defs>
     <circle cx="270" cy="220" r="190" fill="#eef0ff"/>
-    <g filter="url(#hsh)">
+    <g class="sv-window" filter="url(#hsh)">
         <rect x="20" y="70" width="370" height="260" rx="14" fill="#fff"/>
         <path d="M20 84a14 14 0 0 1 14-14h342a14 14 0 0 1 14 14v26H20z" fill="#0b104a"/>
         <circle cx="42" cy="90" r="5" fill="#f26b65"/><circle cx="60" cy="90" r="5" fill="#ffc857"/><circle cx="78" cy="90" r="5" fill="#4fd1a1"/>
@@ -20,7 +20,7 @@
         <rect x="260" y="246" width="110" height="62" rx="8" fill="#eef0ff"/>
         <path d="M150 330h100l12 28H138z" fill="#dfe2f7"/>
     </g>
-    <g filter="url(#hsh)">
+    <g class="sv-phone" filter="url(#hsh)">
         <rect x="338" y="120" width="170" height="312" rx="30" fill="#10142f"/>
         <rect x="348" y="130" width="150" height="292" rx="22" fill="url(#hg2)"/>
         <rect x="397" y="138" width="52" height="12" rx="6" fill="#10142f"/>
@@ -32,10 +32,10 @@
         <rect x="400" y="264" width="80" height="6" rx="3" fill="#b8bdd8"/>
         <rect x="400" y="276" width="56" height="6" rx="3" fill="#b8bdd8"/>
         <rect x="358" y="306" width="130" height="50" rx="12" fill="#fff" opacity=".7"/>
-    </g>
-    <g>
-        <circle cx="490" cy="122" r="22" fill="#f26b65"/>
-        <path d="M490 110a8 8 0 0 0-8 8v6l-3 4h22l-3-4v-6a8 8 0 0 0-8-8zm-3.5 21a3.5 3.5 0 0 0 7 0z" fill="#fff"/>
+        <g class="sv-bell">
+            <circle cx="490" cy="122" r="22" fill="#f26b65"/>
+            <path d="M490 110a8 8 0 0 0-8 8v6l-3 4h22l-3-4v-6a8 8 0 0 0-8-8zm-3.5 21a3.5 3.5 0 0 0 7 0z" fill="#fff"/>
+            </g>
     </g>
 </svg>
 <?php /**PATH D:\xampp\htdocs\runwrk\resources\views/marketing/_hero-art.blade.php ENDPATH**/ ?>
