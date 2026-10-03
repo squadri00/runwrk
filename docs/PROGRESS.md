@@ -3,8 +3,8 @@
 | Phase | Name | Status | Date |
 |---|---|---|---|
 | 0 | Discovery and architecture | Complete | 2026-10-02 |
-| 1 | Foundation | Awaiting approval | 2026-10-02 |
-| 2 | Super admin | Not started | |
+| 1 | Foundation | Complete | 2026-10-02 |
+| 2 | Super admin | Awaiting approval | 2026-10-03 |
 | 3 | Owner admin | Not started | |
 | 4 | Push engine + hosted app | Not started | |
 | 5 | Connectors (snippet, Grav plugin) | Not started | |

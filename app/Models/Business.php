@@ -49,6 +49,18 @@ class Business extends Model
         return $this->hasMany(User::class);
     }
 
+    public function syncDomains(array $domains): void
+    {
+        $origins = app(\App\Domain\Api\OriginChecker::class);
+
+        $clean = collect($domains)->map(fn ($d) => $origins->normalize((string) $d))->filter()->unique()->values();
+
+        $this->domains()->whereNotIn('domain', $clean)->delete();
+        foreach ($clean as $domain) {
+            $this->domains()->firstOrCreate(['domain' => $domain]);
+        }
+    }
+
     public function isLive(): bool
     {
         return in_array($this->status, ['trial', 'active'], true);

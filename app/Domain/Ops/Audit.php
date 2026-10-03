@@ -3,6 +3,7 @@
 namespace App\Domain\Ops;
 
 use App\Domain\Tenancy\CurrentBusiness;
+use App\Domain\Tenancy\Impersonation;
 use App\Models\AuditLog;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +28,7 @@ class Audit
             'actor_type' => $actor ? $actor::class : null,
             'actor_id' => $actor?->getAuthIdentifier(),
             'actor_label' => self::label($actor),
+            'impersonated_by' => app(Impersonation::class)->impersonatorId(),
             'action' => $action,
             'subject_type' => $subject ? $subject::class : null,
             'subject_id' => $subject?->getKey(),

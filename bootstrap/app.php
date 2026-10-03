@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'api.business' => ResolveApiBusiness::class,
         ]);
         $middleware->trustProxies(at: '*');
+        $middleware->redirectGuestsTo(fn (Request $request) => $request->is('admin', 'admin/*') ? route('admin.login') : url('/login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
