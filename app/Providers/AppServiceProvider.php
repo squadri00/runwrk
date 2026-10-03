@@ -11,6 +11,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(CurrentBusiness::class);
+        $this->app->bind(\App\Domain\Push\PushTransport::class, \App\Domain\Push\WebPushTransport::class);
     }
 
     public function boot(): void

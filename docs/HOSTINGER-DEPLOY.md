@@ -27,6 +27,14 @@ Skeleton from Phase 1; the full runbook (cron, SSL, rollback, go-live checklist)
    /opt/alt/php84/usr/bin/php /home/<user>/domains/runwrk.com/runwrk/artisan queue:work --stop-when-empty --max-time=55 --tries=3 >> /dev/null 2>&1
    ```
 
+## Push keys (once, on the server)
+```bash
+cd ~/domains/runwrk.com/runwrk
+/opt/alt/php84/usr/bin/php artisan runwrk:vapid-generate   # writes VAPID keys into .env
+/opt/alt/php84/usr/bin/php artisan runwrk:vapid-backup     # then download storage/backups/*.txt and delete it from the server
+```
+Read `docs/VAPID-KEYS.md`. Never regenerate after customers have subscribed. Also run `php artisan storage:link` (deploy.sh does it).
+
 ## Production `.env`
 Different database and password from local. Quote any value containing `#`, `!` or `@`.
 `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://runwrk.com`, `SESSION_SECURE_COOKIE=true`.

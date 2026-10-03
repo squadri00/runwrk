@@ -62,6 +62,15 @@ class ApiBusinessTest extends TestCase
         $this->ping($this->a, 'https://evilalpha.org')->assertStatus(403);
     }
 
+    public function test_the_platforms_own_address_is_allowed_for_hosted_apps(): void
+    {
+        config(['app.url' => 'https://runwrk.example']);
+
+        $this->ping($this->a, 'https://runwrk.example')->assertOk();
+        $this->ping($this->a, 'https://runwrk.example.evil.com')->assertStatus(403);
+        $this->ping($this->a, 'https://other.example')->assertStatus(403);
+    }
+
     public function test_empty_allowed_list_rejects_browsers(): void
     {
         $c = Business::factory()->create();

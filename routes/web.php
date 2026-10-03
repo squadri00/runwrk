@@ -16,6 +16,9 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\RegistrationOtpController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HostedAppController;
+use App\Http\Controllers\App\NotificationController;
+use App\Http\Controllers\App\SubscriberController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
 
@@ -88,6 +91,13 @@ Route::middleware(['auth:web', 'business'])->prefix('dashboard')->group(function
     Route::get('account', [AccountController::class, 'edit'])->name('account.edit');
     Route::put('account', [AccountController::class, 'update'])->name('account.update');
 
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('notifications/new', [NotificationController::class, 'create'])->name('notifications.create');
+    Route::post('notifications', [NotificationController::class, 'store'])->middleware('throttle:30,1')->name('notifications.store');
+    Route::get('notifications/{id}', [NotificationController::class, 'show'])->whereNumber('id')->name('notifications.show');
+    Route::post('notifications/{id}/cancel', [NotificationController::class, 'cancel'])->whereNumber('id')->name('notifications.cancel');
+    Route::get('subscribers', [SubscriberController::class, 'index'])->name('subscribers.index');
+
     Route::middleware('owner')->group(function () {
         Route::get('branding', [BrandingController::class, 'edit'])->name('branding.edit');
         Route::put('branding', [BrandingController::class, 'update'])->name('branding.update');
@@ -97,4 +107,12 @@ Route::middleware(['auth:web', 'business'])->prefix('dashboard')->group(function
         Route::post('team/{id}/invite', [TeamController::class, 'resend'])->name('team.invite');
         Route::delete('team/{id}', [TeamController::class, 'destroy'])->name('team.destroy');
     });
+});
+
+// Hosted app for each business. Keep last: any unmatched single segment is treated as a slug.
+Route::prefix('{business:slug}')->where(['business' => '[a-z0-9]+(-[a-z0-9]+)*'])->group(function () {
+    Route::get('/', [HostedAppController::class, 'page'])->name('hosted.page');
+    Route::get('manifest.webmanifest', [HostedAppController::class, 'manifest'])->name('hosted.manifest');
+    Route::get('sw.js', [HostedAppController::class, 'serviceWorker'])->name('hosted.sw');
+    Route::get('icons/{file}', [HostedAppController::class, 'icon'])->name('hosted.icon');
 });

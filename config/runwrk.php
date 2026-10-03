@@ -12,6 +12,14 @@ return [
     'vapid' => [
         'public' => env('VAPID_PUBLIC_KEY'),
         'private' => env('VAPID_PRIVATE_KEY'),
-        'subject' => env('VAPID_SUBJECT'),
+        'subject' => env('VAPID_SUBJECT', 'mailto:hello@runwrk.com'),
+    ],
+
+    'push' => [
+        'batch_size' => (int) env('PUSH_BATCH_SIZE', 100),
+        'ttl' => (int) env('PUSH_TTL', 86400),
+        'drop_after_failures' => 5,
+        // Subscription endpoints must belong to a real push service (we POST to them).
+        'allowed_hosts' => ['googleapis.com', 'push.services.mozilla.com', 'push.apple.com', 'notify.windows.com'],
     ],
 ];

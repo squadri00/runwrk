@@ -39,3 +39,12 @@ Local logins (password `password`): `owner@demo.test`, `owner@hoshmint.test`; su
 - New users never get a generated password: use `App\Domain\Tenancy\Invites` (set-password link).
 - Logos go to the `public` disk; run `php artisan storage:link`. Icons come from `App\Services\IconGenerator`.
 - UI: Chantley look. Use `<x-layouts.app|superadmin|guest|site>` and `<x-field>`; no dynamic Tailwind class names (they won't compile).
+
+## Push (Phase 4)
+- Public API `/api/v1/{config,subscribe,unsubscribe,click}` behind `api.business` (key + allowed domains; the platform's own `APP_URL` host is always allowed for hosted apps).
+- Hosted app: `/{slug}` (+ `manifest.webmanifest`, `sw.js`, `icons/{file}`), route group is last in `routes/web.php`.
+- Browser code: `public/assets/runwrk.js`, `public/assets/sw-core.js` (customer sites load the core with `importScripts`).
+- Sending: `PushDispatcher` (cursor + counters on `push_messages`), transport behind `PushTransport` (tests use `Tests\Support\FakeTransport`). Cron runs `schedule:run` (→ `runwrk:push-dispatch`) and `queue:work`. Local: `php artisan runwrk:push-run`.
+- Subscribe endpoints must be on `runwrk.push.allowed_hosts` (SSRF guard). Never relax it.
+- VAPID: `runwrk:vapid-generate` / `runwrk:vapid-backup`, see `docs/VAPID-KEYS.md`. Never regenerate once customers subscribed.
+- Windows/XAMPP needs `OPENSSL_CONF` (use `dev-serve.cmd` or `scripts/dev-phone.ps1`); phone testing: `docs/PHONE-TESTING.md`.

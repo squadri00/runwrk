@@ -1,30 +1,88 @@
-<?php $__env->startSection('title', 'Admin sign in · Runwrk'); ?>
-
-<?php $__env->startSection('body'); ?>
-<main class="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4">
-    <h1 class="mb-6 text-2xl font-bold">Runwrk admin</h1>
-    <form method="POST" action="<?php echo e(route('admin.login')); ?>" class="space-y-4 rounded-lg border border-gray-200 bg-white p-6">
+<?php if (isset($component)) { $__componentOriginal1e6834b7596effc838ab3adb1475b477 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal1e6834b7596effc838ab3adb1475b477 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.layouts.guest','data' => ['heading' => 'Superadmin','subheading' => 'Platform control panel']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('layouts.guest'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['heading' => 'Superadmin','subheading' => 'Platform control panel']); ?>
+    <form method="POST" action="<?php echo e(route('admin.login')); ?>" class="space-y-4">
         <?php echo csrf_field(); ?>
-        <div>
-            <label class="mb-1 block text-sm font-medium">Email</label>
-            <input type="email" name="email" value="<?php echo e(old('email')); ?>" required autofocus class="w-full rounded border border-gray-300 px-3 py-2">
-            <?php $__errorArgs = ['email'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?><p class="mt-1 text-sm text-red-600"><?php echo e($message); ?></p><?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-        </div>
-        <div>
-            <label class="mb-1 block text-sm font-medium">Password</label>
-            <input type="password" name="password" required class="w-full rounded border border-gray-300 px-3 py-2">
-        </div>
-        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="remember"> Remember me</label>
-        <button class="w-full rounded bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-700">Sign in</button>
+        <?php if (isset($component)) { $__componentOriginal5168fdb0c14fd91c6598264bc4be63f2 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal5168fdb0c14fd91c6598264bc4be63f2 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.flash','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('flash'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal5168fdb0c14fd91c6598264bc4be63f2)): ?>
+<?php $attributes = $__attributesOriginal5168fdb0c14fd91c6598264bc4be63f2; ?>
+<?php unset($__attributesOriginal5168fdb0c14fd91c6598264bc4be63f2); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal5168fdb0c14fd91c6598264bc4be63f2)): ?>
+<?php $component = $__componentOriginal5168fdb0c14fd91c6598264bc4be63f2; ?>
+<?php unset($__componentOriginal5168fdb0c14fd91c6598264bc4be63f2); ?>
+<?php endif; ?>
+        <?php if (isset($component)) { $__componentOriginalae4c123bc9806121d87d234de2f27a3b = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalae4c123bc9806121d87d234de2f27a3b = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.field','data' => ['name' => 'email','label' => 'Email','type' => 'email','required' => true,'autofocus' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('field'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'email','label' => 'Email','type' => 'email','required' => true,'autofocus' => true]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalae4c123bc9806121d87d234de2f27a3b)): ?>
+<?php $attributes = $__attributesOriginalae4c123bc9806121d87d234de2f27a3b; ?>
+<?php unset($__attributesOriginalae4c123bc9806121d87d234de2f27a3b); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalae4c123bc9806121d87d234de2f27a3b)): ?>
+<?php $component = $__componentOriginalae4c123bc9806121d87d234de2f27a3b; ?>
+<?php unset($__componentOriginalae4c123bc9806121d87d234de2f27a3b); ?>
+<?php endif; ?>
+        <?php if (isset($component)) { $__componentOriginalae4c123bc9806121d87d234de2f27a3b = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginalae4c123bc9806121d87d234de2f27a3b = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.field','data' => ['name' => 'password','label' => 'Password','type' => 'password','required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('field'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['name' => 'password','label' => 'Password','type' => 'password','required' => true]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginalae4c123bc9806121d87d234de2f27a3b)): ?>
+<?php $attributes = $__attributesOriginalae4c123bc9806121d87d234de2f27a3b; ?>
+<?php unset($__attributesOriginalae4c123bc9806121d87d234de2f27a3b); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalae4c123bc9806121d87d234de2f27a3b)): ?>
+<?php $component = $__componentOriginalae4c123bc9806121d87d234de2f27a3b; ?>
+<?php unset($__componentOriginalae4c123bc9806121d87d234de2f27a3b); ?>
+<?php endif; ?>
+        <label class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+            <input type="checkbox" name="remember" class="rounded border-slate-300 dark:border-slate-700"> Remember me
+        </label>
+        <button class="w-full rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">Sign in</button>
     </form>
-</main>
-<?php $__env->stopSection(); ?>
-
-<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\xampp\htdocs\runwrk\resources\views/admin/login.blade.php ENDPATH**/ ?>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal1e6834b7596effc838ab3adb1475b477)): ?>
+<?php $attributes = $__attributesOriginal1e6834b7596effc838ab3adb1475b477; ?>
+<?php unset($__attributesOriginal1e6834b7596effc838ab3adb1475b477); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal1e6834b7596effc838ab3adb1475b477)): ?>
+<?php $component = $__componentOriginal1e6834b7596effc838ab3adb1475b477; ?>
+<?php unset($__componentOriginal1e6834b7596effc838ab3adb1475b477); ?>
+<?php endif; ?>
+<?php /**PATH D:\xampp\htdocs\runwrk\resources\views/admin/login.blade.php ENDPATH**/ ?>

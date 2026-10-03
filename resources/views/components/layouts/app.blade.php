@@ -39,8 +39,8 @@
             </div>
             <nav class="space-y-1 p-3 text-sm">
                 <a href="{{ route('dashboard') }}" class="block rounded-lg px-3 py-2 font-medium {{ $link('dashboard') }}">Dashboard</a>
-                <span class="flex items-center justify-between rounded-lg px-3 py-2 font-medium text-slate-400">Notifications <span class="text-xs">soon</span></span>
-                <span class="flex items-center justify-between rounded-lg px-3 py-2 font-medium text-slate-400">Subscribers <span class="text-xs">soon</span></span>
+                <a href="{{ route('notifications.index') }}" class="block rounded-lg px-3 py-2 font-medium {{ $link('notifications.*') }}">Notifications</a>
+                <a href="{{ route('subscribers.index') }}" class="block rounded-lg px-3 py-2 font-medium {{ $link('subscribers.*') }}">Subscribers</a>
                 @if ($isOwner)
                     <a href="{{ route('branding.edit') }}" class="block rounded-lg px-3 py-2 font-medium {{ $link('branding.*') }}">Branding</a>
                     <a href="{{ route('team.index') }}" class="block rounded-lg px-3 py-2 font-medium {{ $link('team.*') }}">Team</a>

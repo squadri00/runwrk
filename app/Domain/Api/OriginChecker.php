@@ -23,6 +23,11 @@ class OriginChecker
             return true;
         }
 
+        // The hosted app pages are served from the platform's own address.
+        if ($host === $this->host(config('app.url'))) {
+            return true;
+        }
+
         return $business->domains()->pluck('domain')->contains(fn ($d) => $this->matches($host, $d));
     }
 
