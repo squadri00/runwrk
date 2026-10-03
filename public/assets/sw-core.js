@@ -42,3 +42,18 @@ self.addEventListener('notificationclick', function (event) {
 
     event.waitUntil(Promise.all([track, open]));
 });
+
+/* Offline page: only for page navigations, and only when the network fails. Everything else passes straight through. */
+var OFFLINE_HTML = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>You are offline</title>'
+    + '<style>body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f1f5f9;color:#0f172a;text-align:center;padding:24px}'
+    + '@media(prefers-color-scheme:dark){body{background:#0b1020;color:#f2f4ff}}'
+    + 'main{max-width:340px}h1{font-size:22px;margin:0 0 8px}p{margin:0 0 20px;color:#64748b;line-height:1.5}button{font:inherit;font-weight:600;padding:12px 24px;border:0;border-radius:10px;background:#525fe1;color:#fff;cursor:pointer}'
+    + '.i{font-size:42px;margin-bottom:8px}</style></head><body><main><div class="i">&#128246;</div><h1>You are offline</h1><p>Check your internet connection, then try again.</p>'
+    + '<button onclick="location.reload()">Try again</button></main></body></html>';
+
+self.addEventListener('fetch', function (event) {
+    if (event.request.mode !== 'navigate') { return; }
+    event.respondWith(fetch(event.request).catch(function () {
+        return new Response(OFFLINE_HTML, { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+    }));
+});

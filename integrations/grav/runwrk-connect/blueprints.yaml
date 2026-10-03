@@ -1,0 +1,46 @@
+name: Runwrk Connect
+slug: runwrk-connect
+type: plugin
+version: 1.0.0
+description: Adds your Runwrk app to this website. Visitors can install the app and turn on notifications.
+icon: bell
+author:
+  name: Runwrk
+  email: hello@runwrk.com
+homepage: https://runwrk.com
+license: MIT
+dependencies:
+  - { name: grav, version: '>=1.7.0' }
+
+form:
+  validation: loose
+  fields:
+    enabled:
+      type: toggle
+      label: Plugin status
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+    key:
+      type: text
+      label: Your Runwrk key
+      help: Starts with pk_. Find it in your Runwrk dashboard under Connect website.
+      placeholder: pk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      validate:
+        pattern: '^(pk_[A-Za-z0-9]{20,})?$'
+    api_url:
+      type: text
+      label: Runwrk address
+      default: 'https://runwrk.com'
+      help: Leave as it is unless Runwrk told you otherwise.
+    position:
+      type: select
+      label: Button position
+      default: right
+      options:
+        right: Bottom right
+        left: Bottom left

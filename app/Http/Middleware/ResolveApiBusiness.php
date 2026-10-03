@@ -15,6 +15,18 @@ class ResolveApiBusiness
 
     public function handle(Request $request, Closure $next): Response
     {
+        // Browsers send the CORS preflight WITHOUT custom headers, so it cannot carry the key.
+        // Answering it reveals nothing; the real request below still needs a valid key and an allowed origin.
+        if ($request->isMethod('OPTIONS')) {
+            return response('', 204, [
+                'Access-Control-Allow-Origin' => $request->headers->get('Origin') ?: '*',
+                'Access-Control-Allow-Headers' => 'Content-Type, X-Runwrk-Key',
+                'Access-Control-Allow-Methods' => 'GET, POST, OPTIONS',
+                'Access-Control-Max-Age' => '600',
+                'Vary' => 'Origin',
+            ]);
+        }
+
         $key = $request->header('X-Runwrk-Key') ?: $request->query('key');
 
         $business = is_string($key) && $key !== ''
@@ -33,7 +45,7 @@ class ResolveApiBusiness
 
         $this->current->set($business);
 
-        $response = $request->isMethod('OPTIONS') ? response('', 204) : $next($request);
+        $response = $next($request);
 
         if ($origin) {
             $response->headers->set('Access-Control-Allow-Origin', $origin);

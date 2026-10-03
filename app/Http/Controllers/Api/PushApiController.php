@@ -2,19 +2,44 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Domain\Api\OriginChecker;
 use App\Domain\Tenancy\CurrentBusiness;
 use App\Http\Controllers\Controller;
 use App\Models\PushMessage;
 use App\Models\PushSubscription;
+use App\Services\ManifestBuilder;
 use Illuminate\Http\Request;
 
 class PushApiController extends Controller
 {
-    public function config(CurrentBusiness $current)
+    public function config(CurrentBusiness $current, ManifestBuilder $manifests)
     {
         $business = $current->getOrFail();
+        $base = rtrim(config('app.url'), '/');
 
-        return ['vapidPublicKey' => config('runwrk.vapid.public'), 'name' => $business->name];
+        return [
+            'vapidPublicKey' => config('runwrk.vapid.public'),
+            'name' => $business->name,
+            'shortName' => $business->short_name ?: $business->name,
+            'themeColor' => $business->theme_color,
+            'backgroundColor' => $business->background_color,
+            'icon' => $manifests->iconBase($business).'icon-192.png',
+            'appUrl' => $base.'/'.$business->slug,
+        ];
+    }
+
+    /** Web app manifest for the business's own website (fetched by the Grav plugin, or built into a file). */
+    public function manifest(Request $request, CurrentBusiness $current, OriginChecker $origins, ManifestBuilder $manifests)
+    {
+        $site = (string) $request->query('site');
+        $scheme = strtolower((string) parse_url($site, PHP_URL_SCHEME));
+        $business = $current->getOrFail();
+
+        if (! in_array($scheme, ['http', 'https'], true) || ! $origins->host($site) || ! $origins->check($business, $site)) {
+            return response()->json(['error' => 'site_not_allowed'], 403);
+        }
+
+        return response()->json($manifests->forSite($business, $site), 200, ['Content-Type' => 'application/manifest+json', 'Cache-Control' => 'public, max-age=300']);
     }
 
     public function subscribe(Request $request, CurrentBusiness $current)

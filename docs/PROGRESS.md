@@ -7,8 +7,8 @@
 | 2 | Super admin | Complete | 2026-10-03 |
 | 3 | Owner admin (+ Phase 2 fixes) | Complete | 2026-10-03 |
 | 4 | Push engine + hosted app | Complete | 2026-10-03 |
-| 4b | Marketing website | Awaiting approval | 2026-10-03 |
-| 5 | Connectors (snippet, Grav plugin) | Not started | |
+| 4b | Marketing website | Complete | 2026-10-03 |
+| 5 | Connectors (snippet, Grav plugin) | Awaiting approval | 2026-10-03 |
 | 6 | First deploy + Hoshmint pilot | Not started | |
 | 7 | Barber & salon module + demo | Not started | |
 | 8 | Marketing site + billing | Not started | |

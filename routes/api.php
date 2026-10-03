@@ -11,6 +11,7 @@ Route::prefix('v1')->middleware(['api.business', 'throttle:120,1'])->group(funct
     ]);
 
     Route::match(['get', 'options'], 'config', [PushApiController::class, 'config']);
+    Route::match(['get', 'options'], 'manifest', [PushApiController::class, 'manifest']);
     Route::match(['post', 'options'], 'subscribe', [PushApiController::class, 'subscribe'])->middleware('throttle:20,1');
     Route::match(['post', 'options'], 'unsubscribe', [PushApiController::class, 'unsubscribe'])->middleware('throttle:20,1');
     Route::match(['post', 'options'], 'click', [PushApiController::class, 'click'])->middleware('throttle:60,1');

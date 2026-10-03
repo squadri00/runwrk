@@ -71,6 +71,24 @@ class ApiBusinessTest extends TestCase
         $this->ping($this->a, 'https://other.example')->assertStatus(403);
     }
 
+    public function test_real_browser_preflight_has_no_key_and_still_succeeds(): void
+    {
+        $res = $this->call('OPTIONS', '/api/v1/subscribe', [], [], [], [
+            'HTTP_ORIGIN' => 'https://alpha.com', 'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'POST', 'HTTP_ACCESS_CONTROL_REQUEST_HEADERS' => 'content-type,x-runwrk-key',
+        ]);
+
+        $res->assertStatus(204)->assertHeader('Access-Control-Allow-Origin', 'https://alpha.com');
+        $this->assertStringContainsString('X-Runwrk-Key', $res->headers->get('Access-Control-Allow-Headers'));
+        $this->assertSame('', $res->getContent(), 'a preflight must reveal nothing');
+    }
+
+    public function test_the_real_request_after_a_preflight_is_still_checked(): void
+    {
+        // Preflight is open, but data is not: wrong origin or wrong key still fails, with no CORS header.
+        $this->ping($this->a, 'https://evil.com')->assertStatus(403)->assertHeaderMissing('Access-Control-Allow-Origin');
+        $this->call('GET', '/api/v1/config', [], [], [], ['HTTP_ORIGIN' => 'https://alpha.com', 'HTTP_X_RUNWRK_KEY' => 'pk_nope'])->assertStatus(401);
+    }
+
     public function test_empty_allowed_list_rejects_browsers(): void
     {
         $c = Business::factory()->create();

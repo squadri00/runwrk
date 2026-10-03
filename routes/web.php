@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\TwoFactorChallengeController;
 use App\Http\Controllers\App\AccountController;
 use App\Http\Controllers\App\BrandingController;
+use App\Http\Controllers\App\ConnectController;
 use App\Http\Controllers\App\TeamController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
@@ -109,6 +110,11 @@ Route::middleware(['auth:web', 'business'])->prefix('dashboard')->group(function
     Route::get('notifications/{id}', [NotificationController::class, 'show'])->whereNumber('id')->name('notifications.show');
     Route::post('notifications/{id}/cancel', [NotificationController::class, 'cancel'])->whereNumber('id')->name('notifications.cancel');
     Route::get('subscribers', [SubscriberController::class, 'index'])->name('subscribers.index');
+
+    Route::get('connect', [ConnectController::class, 'index'])->name('connect.index');
+    Route::get('connect/runwrk-sw.js', [ConnectController::class, 'worker'])->name('connect.worker');
+    Route::get('connect/runwrk-manifest.webmanifest', [ConnectController::class, 'manifest'])->name('connect.manifest');
+    Route::get('connect/runwrk-connect.zip', [ConnectController::class, 'gravPlugin'])->name('connect.grav');
 
     Route::middleware('owner')->group(function () {
         Route::get('branding', [BrandingController::class, 'edit'])->name('branding.edit');

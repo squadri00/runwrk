@@ -1,6 +1,6 @@
 # Phase 04b — Marketing website
 
-Status: **awaiting approval**
+Status: **complete**
 
 ## Goal
 Public site on runwrk.com that sells two things in plain English: a small-business website and your own app with messages.

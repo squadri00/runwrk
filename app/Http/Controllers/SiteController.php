@@ -44,7 +44,7 @@ class SiteController extends Controller
     public function demo()
     {
         $url = url('/demo-barber');
-        $qr = (new Writer(new ImageRenderer(new RendererStyle(180, 1), new SvgImageBackEnd())))->writeString($url);
+        $qr = \App\Support\Qr::svg($url);
 
         return view('marketing.demo', ['demoUrl' => $url, 'qr' => $qr]);
     }

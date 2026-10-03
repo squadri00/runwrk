@@ -54,3 +54,10 @@ Local logins (password `password`): `owner@demo.test`, `owner@hoshmint.test`; su
 - Prices and offer wording live in `config/site.php`. App plans come from the `plans` table. Never use the words PWA/Grav/flat-file on customer-facing pages (test enforces).
 - Beware: Blade treats `@something` inside templates as a directive (broke JSON-LD `@context`); build such arrays in an `@php` block.
 - Contact messages: table `contact_messages`, admin at `/admin/messages`.
+
+## Connectors (Phase 5)
+- Customer websites use `public/assets/runwrk-connect.js` (one script line, shadow-DOM button) + two files on their own domain: `runwrk-sw.js` (one line importing `sw-core.js`) and `runwrk-manifest.webmanifest` (must be served from the site's own address). Grav sites use `integrations/grav/runwrk-connect` instead. Guide: `docs/guides/CONNECT-A-WEBSITE.md`.
+- API for connected sites: `config`, `manifest?site=` (site must be on the business's allowed domains), `subscribe`, `unsubscribe`, `click`. **CORS preflight (OPTIONS) arrives without the key header**; `ResolveApiBusiness` answers it first. Test it the way browsers behave (no key on OPTIONS).
+- Dashboard page `Connect website` (`ConnectController`) generates the downloads and the Grav zip with the business key filled in.
+- `tests/Support/sw-sim.cjs` runs the real `sw-core.js` in a fake worker scope (needs node; test skips without it). `package.json` is `"type": "module"`, so Node helper scripts must be `.cjs`.
+- The embedded preview browser cannot register workers over plain http or on `*.localhost`; test connectors over an https tunnel and add the tunnel host to the business's allowed domains.
