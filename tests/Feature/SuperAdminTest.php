@@ -62,7 +62,7 @@ class SuperAdminTest extends TestCase
 
     public function test_create_business_with_owner_domains_and_audit(): void
     {
-        $this->asAdmin()->post('/admin/businesses', $this->payload())->assertSessionHas('new_login');
+        $this->asAdmin()->post('/admin/businesses', $this->payload())->assertSessionHas('invite_url');
 
         $business = Business::where('slug', 'joes-barber')->firstOrFail();
         $this->assertStringStartsWith('pk_', $business->public_key);
@@ -162,7 +162,7 @@ class SuperAdminTest extends TestCase
         $business = Business::factory()->create();
         User::factory()->create(['business_id' => $business->id]);
 
-        foreach (['/admin', '/admin/businesses', '/admin/businesses/create', "/admin/businesses/{$business->id}", "/admin/businesses/{$business->id}/edit", '/admin/audit'] as $url) {
+        foreach (['/admin', '/admin/businesses', '/admin/businesses/create', "/admin/businesses/{$business->id}", "/admin/businesses/{$business->id}/edit", '/admin/audit', '/admin/plans', '/admin/plans/create', '/admin/settings', '/admin/security'] as $url) {
             $this->asAdmin()->get($url)->assertOk();
         }
     }

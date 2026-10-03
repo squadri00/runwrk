@@ -4,8 +4,8 @@
 |---|---|---|---|
 | 0 | Discovery and architecture | Complete | 2026-10-02 |
 | 1 | Foundation | Complete | 2026-10-02 |
-| 2 | Super admin | Awaiting approval | 2026-10-03 |
-| 3 | Owner admin | Not started | |
+| 2 | Super admin | Complete | 2026-10-03 |
+| 3 | Owner admin (+ Phase 2 fixes) | Awaiting approval | 2026-10-03 |
 | 4 | Push engine + hosted app | Not started | |
 | 5 | Connectors (snippet, Grav plugin) | Not started | |
 | 6 | First deploy + Hoshmint pilot | Not started | |

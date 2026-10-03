@@ -8,6 +8,8 @@ class DashboardController extends Controller
 {
     public function index(CurrentBusiness $current)
     {
-        return view('dashboard', ['business' => $current->getOrFail()]);
+        $business = $current->getOrFail()->loadCount('domains', 'users');
+
+        return view('app.dashboard', compact('business'));
     }
 }

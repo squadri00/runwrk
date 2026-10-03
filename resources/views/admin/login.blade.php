@@ -1,23 +1,12 @@
-@extends('layouts.app')
-
-@section('title', 'Admin sign in · Runwrk')
-
-@section('body')
-<main class="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4">
-    <h1 class="mb-6 text-2xl font-bold">Runwrk admin</h1>
-    <form method="POST" action="{{ route('admin.login') }}" class="space-y-4 rounded-lg border border-gray-200 bg-white p-6">
+<x-layouts.guest heading="Superadmin" subheading="Platform control panel">
+    <form method="POST" action="{{ route('admin.login') }}" class="space-y-4">
         @csrf
-        <div>
-            <label class="mb-1 block text-sm font-medium">Email</label>
-            <input type="email" name="email" value="{{ old('email') }}" required autofocus class="w-full rounded border border-gray-300 px-3 py-2">
-            @error('email')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-        </div>
-        <div>
-            <label class="mb-1 block text-sm font-medium">Password</label>
-            <input type="password" name="password" required class="w-full rounded border border-gray-300 px-3 py-2">
-        </div>
-        <label class="flex items-center gap-2 text-sm"><input type="checkbox" name="remember"> Remember me</label>
-        <button class="w-full rounded bg-indigo-600 py-2 font-medium text-white hover:bg-indigo-700">Sign in</button>
+        <x-flash />
+        <x-field name="email" label="Email" type="email" required autofocus />
+        <x-field name="password" label="Password" type="password" required />
+        <label class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+            <input type="checkbox" name="remember" class="rounded border-slate-300 dark:border-slate-700"> Remember me
+        </label>
+        <button class="w-full rounded-lg bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">Sign in</button>
     </form>
-</main>
-@endsection
+</x-layouts.guest>

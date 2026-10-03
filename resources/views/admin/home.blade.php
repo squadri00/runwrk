@@ -1,20 +1,16 @@
-@extends('layouts.admin')
+<x-layouts.superadmin title="Dashboard">
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        @foreach (\App\Models\Business::STATUSES as $s)
+            <a href="{{ route('admin.businesses.index', ['status' => $s]) }}" class="rounded-xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                <div class="text-2xl font-semibold text-slate-900 dark:text-white">{{ $counts[$s] ?? 0 }}</div>
+                <div class="mt-1 text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ $s }}</div>
+            </a>
+        @endforeach
+    </div>
 
-@section('title', 'Admin · Runwrk')
-
-@section('content')
-<div class="mb-8 flex items-center justify-between">
-    <h1 class="text-2xl font-bold">Overview</h1>
-    <a href="{{ route('admin.businesses.create') }}" class="rounded bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">New business</a>
-</div>
-<div class="mb-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-    @foreach (\App\Models\Business::STATUSES as $s)
-        <a href="{{ route('admin.businesses.index', ['status' => $s]) }}" class="rounded-lg border border-gray-200 bg-white p-4">
-            <div class="text-3xl font-bold">{{ $counts[$s] ?? 0 }}</div>
-            <div class="text-sm capitalize text-gray-500">{{ $s }}</div>
-        </a>
-    @endforeach
-</div>
-<h2 class="mb-3 font-semibold">Recent activity</h2>
-@include('admin._logs', ['logs' => $recent])
-@endsection
+    <div class="mt-6 flex items-center justify-between">
+        <h2 class="text-sm font-semibold">Recent activity</h2>
+        <a href="{{ route('admin.businesses.create') }}" class="rounded-lg bg-violet-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-violet-800">New business</a>
+    </div>
+    <div class="mt-3">@include('admin._logs', ['logs' => $recent])</div>
+</x-layouts.superadmin>

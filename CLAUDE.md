@@ -31,3 +31,11 @@ php artisan migrate:fresh --seed   # local demo data: demo-barber, hoshmint, sup
 php artisan test                   # uses runwrkdb_test (TestCase refuses any other database)
 ```
 Local logins (password `password`): `owner@demo.test`, `owner@hoshmint.test`; superadmin = `SUPERADMIN_EMAIL` in `.env`.
+
+## Auth and areas (Phase 3)
+- Public: `/`, `/pricing`, `/register` (plan via `?plan=code`), `/login`, `/password/forgot`. Signup = pending registration + emailed code.
+- Owner area `/dashboard/*` (guard `web`, middleware `business`); `owner` middleware for branding and team. Roles: `owner`, `staff`.
+- Super admin `/admin/*` (guard `superadmin`), TOTP 2FA, Plans, Settings (SMTP etc. in `settings` table, applied by `PlatformSettings::applyToConfig()`).
+- New users never get a generated password: use `App\Domain\Tenancy\Invites` (set-password link).
+- Logos go to the `public` disk; run `php artisan storage:link`. Icons come from `App\Services\IconGenerator`.
+- UI: Chantley look. Use `<x-layouts.app|superadmin|guest|site>` and `<x-field>`; no dynamic Tailwind class names (they won't compile).

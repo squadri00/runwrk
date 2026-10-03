@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-#[Fillable(['name', 'slug', 'status', 'plan_id', 'short_name', 'logo_path', 'icon_path', 'theme_color', 'background_color', 'phone', 'address', 'website_url', 'hours', 'timezone'])]
+#[Fillable(['name', 'slug', 'status', 'plan_id', 'short_name', 'logo_path', 'icon_path', 'theme_color', 'background_color', 'phone', 'address', 'website_url', 'timezone'])]
 class Business extends Model
 {
     use HasFactory, SoftDeletes;
@@ -29,9 +29,22 @@ class Business extends Model
         return 'pk_'.Str::random(32);
     }
 
-    protected function casts(): array
+    public static function uniqueSlug(string $name): string
     {
-        return ['hours' => 'array'];
+        $base = Str::limit(Str::slug($name), 40, '') ?: 'business';
+        $slug = $base;
+        $n = 1;
+
+        while (in_array($slug, config('runwrk.reserved_paths'), true) || static::withTrashed()->where('slug', $slug)->exists()) {
+            $slug = $base.'-'.++$n;
+        }
+
+        return $slug;
+    }
+
+    public function owner(): ?User
+    {
+        return $this->users()->where('role', 'owner')->orderBy('id')->first();
     }
 
     public function plan(): BelongsTo

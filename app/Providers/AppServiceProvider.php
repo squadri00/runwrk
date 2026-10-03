@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Domain\Ops\PlatformSettings;
 use App\Domain\Tenancy\CurrentBusiness;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,6 +15,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        //
+        PlatformSettings::applyToConfig();
     }
 }

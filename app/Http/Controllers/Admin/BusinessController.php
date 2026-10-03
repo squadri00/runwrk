@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Domain\Ops\Audit;
+use App\Domain\Tenancy\Invites;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\Business;
@@ -20,7 +21,7 @@ class BusinessController extends Controller
     public function home()
     {
         return view('admin.home', [
-            'counts' => Business::selectRaw('status, count(*) c')->groupBy('status')->pluck('c', 'status'),
+            'counts' => Business::selectRaw("status, count(*) c")->groupBy('status')->pluck('c', 'status'),
             'recent' => AuditLog::latest('id')->limit(10)->get(),
         ]);
     }
@@ -37,7 +38,7 @@ class BusinessController extends Controller
 
     public function create()
     {
-        return view('admin.businesses.create', ['plans' => Plan::where('active', true)->get()]);
+        return view('admin.businesses.create', ['plans' => Plan::available()->orderBy('sort_order')->get()]);
     }
 
     public function store(Request $request)
@@ -52,20 +53,30 @@ class BusinessController extends Controller
             'domains' => ['nullable', 'string', 'max:2000', $this->domainRule()],
         ]);
 
-        $password = Str::password(14, symbols: false);
-
-        $business = DB::transaction(function () use ($data, $password) {
+        $business = DB::transaction(function () use ($data) {
             $business = Business::create(Arr::only($data, ['name', 'slug', 'plan_id', 'status']) + ['short_name' => Str::limit($data['name'], 30, '')]);
             $business->syncDomains(preg_split('/[\s,]+/', $data['domains'] ?? '', -1, PREG_SPLIT_NO_EMPTY));
-            User::create(['business_id' => $business->id, 'name' => $data['owner_name'], 'email' => $data['owner_email'], 'role' => 'owner', 'password' => $password]);
 
             return $business;
         });
 
+        [, $url] = app(Invites::class)->createUser([
+            'business_id' => $business->id, 'name' => $data['owner_name'], 'email' => $data['owner_email'], 'role' => 'owner',
+        ]);
+
         Audit::log('business.create', $business, ['slug' => $business->slug], $business->id);
 
-        return redirect()->route('admin.businesses.show', $business)
-            ->with('new_login', ['email' => $data['owner_email'], 'password' => $password]);
+        return redirect()->route('admin.businesses.show', $business)->with('invite_url', $url);
+    }
+
+    public function resendInvite(Business $business, User $user, Invites $invites)
+    {
+        abort_unless($user->business_id === $business->id, 404);
+
+        $url = $invites->send($user->setRelation('business', $business));
+        Audit::log('user.invite_sent', $user, ['email' => $user->email], $business->id);
+
+        return back()->with('invite_url', $url)->with('status', 'Password link sent to '.$user->email.'.');
     }
 
     public function show(Business $business)
@@ -78,7 +89,7 @@ class BusinessController extends Controller
 
     public function edit(Business $business)
     {
-        return view('admin.businesses.edit', ['business' => $business->load('domains'), 'plans' => Plan::all()]);
+        return view('admin.businesses.edit', ['business' => $business->load('domains'), 'plans' => Plan::orderBy('sort_order')->get()]);
     }
 
     public function update(Request $request, Business $business)

@@ -6,22 +6,49 @@ use App\Domain\Ops\Audit;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     public function show()
     {
-        return Auth::guard('superadmin')->check() ? redirect()->route('admin.home') : view('admin.login');
+        return view('admin.login');
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->validate(['email' => 'required|email', 'password' => 'required']);
+        $data = $request->validate(['email' => 'required|email', 'password' => 'required']);
 
-        if (! Auth::guard('superadmin')->attempt($credentials, $request->boolean('remember'))) {
-            return back()->withInput($request->only('email'))->withErrors(['email' => 'Those details do not match.']);
+        $key = 'admin-login:'.strtolower($data['email']).'|'.$request->ip();
+
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            throw ValidationException::withMessages(['email' => 'Too many attempts. Try again in '.RateLimiter::availableIn($key).' seconds.']);
         }
 
+        $provider = Auth::guard('superadmin')->getProvider();
+        $admin = $provider->retrieveByCredentials(['email' => $data['email']]);
+
+        if (! $admin || ! $provider->validateCredentials($admin, ['password' => $data['password']])) {
+            RateLimiter::hit($key, 60);
+
+            throw ValidationException::withMessages(['email' => 'Those details do not match.']);
+        }
+
+        RateLimiter::clear($key);
+
+        if ($admin->hasTwoFactor()) {
+            $request->session()->put('admin_2fa', ['id' => $admin->id, 'remember' => $request->boolean('remember'), 'at' => now()->timestamp]);
+
+            return redirect()->route('admin.2fa');
+        }
+
+        return $this->complete($request, $admin, $request->boolean('remember'));
+    }
+
+    public function complete(Request $request, $admin, bool $remember)
+    {
+        Auth::guard('superadmin')->login($admin, $remember);
         $request->session()->regenerate();
         Audit::log('superadmin.login');
 

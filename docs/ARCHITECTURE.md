@@ -119,11 +119,12 @@ Platform (Phase 1–3)
 
 | Table | Key columns |
 |---|---|
-| `businesses` | name, slug (unique, not reserved), status (trial/active/suspended/cancelled), plan_id, public_key (`pk_…`, unique), short_name, logo_path, icon_path, theme_color, background_color, phone, address, website_url, hours (json), timezone, salesperson_id (later) |
+| `businesses` | name, slug (unique, not reserved), status (trial/active/suspended/cancelled), plan_id, public_key (`pk_…`, unique), short_name, logo_path, icon_path, theme_color, background_color, phone, address, website_url, timezone, salesperson_id (later) |
 | `business_domains` | business_id, domain (normalised host, unique per business) |
 | `users` | business_id, name, email (unique), password, role (owner/staff), two_factor_secret, two_factor_confirmed_at, last_login_at |
 | `superadmins` | name, email, password, two_factor fields |
-| `plans` | name, code, price fields (filled in billing phase), features (json) |
+| `plans` | name, code, description, price_cents, currency, interval, stripe_price_id, features (json), is_public, sort_order, archived_at |
+| `pending_registrations` | token, name, business_name, email, password (hashed), plan_id, otp_code (hashed), otp_expires_at, otp_attempts, finalized_at, business_id |
 | `settings` | business_id nullable, key, value (encrypted where secret) |
 | `audit_logs` | business_id nullable, actor_type, actor_id, impersonated_by, action, meta (json) |
 | Laravel | `jobs`, `failed_jobs`, `cache`, `sessions`, `password_reset_tokens` |

@@ -1,6 +1,6 @@
 # Phase 02 — Super admin
 
-Status: **awaiting approval**
+Status: **complete** (fixes and extras in phase-03 doc)
 
 ## Goal
 Manage business customers from one panel: create, plan, status, public key, allowed domains, support impersonation.

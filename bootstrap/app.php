@@ -18,7 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'business' => ResolveBusiness::class,
             'api.business' => ResolveApiBusiness::class,
+            'owner' => \App\Http\Middleware\EnsureOwner::class,
         ]);
+        $middleware->redirectUsersTo(fn (Request $request) => $request->is('admin', 'admin/*') ? route('admin.home') : route('dashboard'));
         $middleware->trustProxies(at: '*');
         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('admin', 'admin/*') ? route('admin.login') : url('/login'));
     })
