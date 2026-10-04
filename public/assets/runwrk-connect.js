@@ -18,6 +18,9 @@
     var source = tag.getAttribute('data-source') || 'snippet';
     var position = tag.getAttribute('data-position') === 'left' ? 'left' : 'right';
     var DISMISS = 'runwrk-dismissed-' + key;
+    // data-install="no": the website has its own install banner, so only offer notifications.
+    var showInstall = tag.getAttribute('data-install') !== 'no';
+    var customLabel = tag.getAttribute('data-label');
 
     function ready(fn) { if (document.readyState !== 'loading') { fn(); } else { document.addEventListener('DOMContentLoaded', fn); } }
     function idle(fn) { if ('requestIdleCallback' in window) { requestIdleCallback(fn, { timeout: 2500 }); } else { setTimeout(fn, 800); } }
@@ -94,7 +97,7 @@
 
         function render(s) {
             var standalone = s.standalone, html = '';
-            html += '<div class="top"><img src="' + esc(conf.icon) + '" alt=""><div><b>' + esc(conf.name) + '</b><small>Our app</small></div><button class="x" id="c" aria-label="Close">&times;</button></div>';
+            html += '<div class="top"><img src="' + esc(conf.icon) + '" alt=""><div><b>' + esc(conf.name) + '</b><small>' + (showInstall ? 'Our app' : 'Notifications') + '</small></div><button class="x" id="c" aria-label="Close">&times;</button></div>';
 
             if (s.ios && !standalone) {
                 html += '<p>Add our app to your iPhone, then turn on messages:</p><ol><li>Tap the <b>Share</b> button in Safari.</li><li>Tap <b>Add to Home Screen</b>.</li><li>Open the app from your home screen.</li><li>Tap <b>Turn on notifications</b>.</li></ol>';
@@ -106,7 +109,7 @@
                 html += '<p>Get our latest news and offers straight on your phone.</p><button class="btn" id="on">Turn on notifications</button>';
             }
 
-            if (!standalone && !s.ios) {
+            if (!standalone && !s.ios && showInstall) {
                 html += R.canInstall() ? '<button class="btn alt" id="inst">Install our app</button>' : '<p class="note">To install: open your browser menu and choose "Add to Home screen" or "Install app".</p>';
             }
             html += '<p class="note" id="msg" hidden></p>';
@@ -126,7 +129,7 @@
                 render(s);
                 var hide = s.standalone && s.subscribed;
                 host.style.display = hide ? 'none' : '';
-                label.textContent = s.standalone && !s.subscribed ? 'Turn on notifications' : 'Get our app';
+                label.textContent = s.standalone && !s.subscribed ? 'Turn on notifications' : (customLabel || (showInstall ? 'Get our app' : 'Get notifications'));
                 fab.classList.toggle('compact', dismissedRecently() && !panel.classList.contains('open'));
             });
         }

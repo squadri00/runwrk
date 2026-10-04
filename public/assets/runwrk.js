@@ -24,10 +24,22 @@
         return out;
     }
 
-    function registration() {
-        return navigator.serviceWorker.register(cfg.sw, { scope: cfg.scope }).then(function () {
-            return navigator.serviceWorker.ready;
+    // Wait until OUR worker (the one just registered for cfg.scope) is active. navigator.serviceWorker.ready would
+    // return the website's own worker when it controls the page, and notifications would then go to the wrong place.
+    function whenActive(reg) {
+        if (reg.active) { return Promise.resolve(reg); }
+        var sw = reg.installing || reg.waiting;
+        if (!sw) { return Promise.reject(new Error('no worker')); }
+        return new Promise(function (resolve, reject) {
+            sw.addEventListener('statechange', function () {
+                if (sw.state === 'activated') { resolve(reg); }
+                if (sw.state === 'redundant') { reject(new Error('worker failed to install')); }
+            });
         });
+    }
+
+    function registration() {
+        return navigator.serviceWorker.register(cfg.sw, { scope: cfg.scope }).then(whenActive);
     }
 
     function payload(sub) {

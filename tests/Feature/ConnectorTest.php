@@ -206,6 +206,35 @@ class ConnectorTest extends TestCase
         $this->assertSame('{"message":7}', $r['click']['body']);
     }
 
+    public function test_notifications_attach_to_runwrks_own_worker_even_when_the_website_has_one(): void
+    {
+        exec('node --version 2>&1', $o, $code);
+        if ($code !== 0) {
+            $this->markTestSkipped('node is not installed');
+        }
+
+        foreach (['active-now', 'installing-first'] as $mode) {
+            $out = [];
+            exec('node '.escapeshellarg(base_path('tests/Support/lib-sim.cjs')).' '.escapeshellarg(public_path('assets/runwrk.js')).' '.$mode.' 2>&1', $out, $c);
+            $r = json_decode(end($out), true);
+
+            $this->assertSame(0, $c, implode("
+", $out));
+            $this->assertSame('/runwrk-app/', $r['registeredScope'], $mode);
+            $this->assertSame(['runwrk-worker'], $r['subscribedThrough'], "$mode: must subscribe through Runwrk\x27s worker, never the website\x27s own");
+            $this->assertTrue($r['savedToRunwrk'], $mode);
+        }
+    }
+
+    public function test_connect_script_can_run_in_notifications_only_mode(): void
+    {
+        $js = file_get_contents(public_path('assets/runwrk-connect.js'));
+
+        $this->assertStringContainsString("data-install", $js);
+        $this->assertStringContainsString("data-label", $js);
+        $this->assertStringContainsString('showInstall', $js);
+    }
+
     public function test_connect_script_is_small_isolated_and_fails_quietly(): void
     {
         $js = file_get_contents(public_path('assets/runwrk-connect.js'));
