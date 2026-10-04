@@ -20,7 +20,7 @@ class WebPushTransport implements PushTransport
 
         $webPush = new ConcurrentWebPush(
             ['VAPID' => ['subject' => $vapid['subject'], 'publicKey' => $vapid['public'], 'privateKey' => $vapid['private']]],
-            ['TTL' => $ttl, 'urgency' => 'normal'],
+            ['TTL' => $ttl, 'urgency' => config('runwrk.push.urgency', 'high')],
             $http,
         );
 

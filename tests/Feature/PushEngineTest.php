@@ -223,6 +223,12 @@ class PushEngineTest extends TestCase
         $this->assertSame('sent', PushMessage::withoutBusinessScope()->find($m->id)->status);
     }
 
+    public function test_messages_are_sent_with_high_urgency_so_idle_phones_wake_up(): void
+    {
+        $this->assertSame('high', config('runwrk.push.urgency'));
+        $this->assertStringContainsString("config('runwrk.push.urgency'", file_get_contents(app_path('Domain/Push/WebPushTransport.php')));
+    }
+
     public function test_subscriptions_and_messages_are_invisible_without_a_business(): void
     {
         $this->subs($this->a, 2);
