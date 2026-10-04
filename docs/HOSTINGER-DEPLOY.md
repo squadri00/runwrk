@@ -35,6 +35,20 @@ cd ~/domains/runwrk.com/runwrk
 ```
 Read `docs/VAPID-KEYS.md`. Never regenerate after customers have subscribed. Also run `php artisan storage:link` (deploy.sh does it).
 
+## First deploy (done 2026-10-04) and what to remember
+- Account folder: `~/domains/runwrk.com/` holds `runwrk/` (the app), `public_html` (a link to `runwrk/public`) and `public_html_backup` (the old empty folder).
+- **The website PHP version is set per domain in hPanel and must be 8.4.** hPanel > Websites > runwrk.com > Dashboard > PHP Configuration > 8.4. The SSH command line can say 8.4 while the website still runs 8.3 (symptom: every page shows `Composer detected issues in your platform ... >= 8.4.1`).
+- `crontab` is not available over SSH here. Add the two jobs in hPanel > Advanced > Cron Jobs (every minute):
+  ```
+  /opt/alt/php84/usr/bin/php /home/u528385036/domains/runwrk.com/runwrk/artisan schedule:run >> /dev/null 2>&1
+  /opt/alt/php84/usr/bin/php /home/u528385036/domains/runwrk.com/runwrk/artisan queue:work --stop-when-empty --max-time=55 --tries=3 >> /dev/null 2>&1
+  ```
+- First logins are in `~/runwrk-first-login.txt` (mode 600). Save them in your password manager, then delete the file.
+- The live push keys backup is `runwrk/storage/backups/vapid-*.txt`. Download it, store it safely, then delete it from the server. Never regenerate the keys.
+- Signups are switched off until email works (Super admin > Settings > allow new businesses to sign up).
+- Updates: push to GitHub, then `cd ~/domains/runwrk.com/runwrk && bash deploy.sh`. The script also creates the storage folders Laravel needs.
+- The repository is public, so the server clones it without a login. If you make it private, add a deploy key on the server first.
+
 ## Production `.env`
 Different database and password from local. Quote any value containing `#`, `!` or `@`.
 `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://runwrk.com`, `SESSION_SECURE_COOKIE=true`.
