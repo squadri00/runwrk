@@ -14,6 +14,10 @@ main() {
     PHP=/opt/alt/php84/usr/bin/php
     COMPOSER=/usr/local/bin/composer
 
+    echo "--- folders Laravel needs"
+    mkdir -p storage/logs storage/app/public storage/app/private storage/framework/cache/data storage/framework/sessions storage/framework/views storage/framework/testing bootstrap/cache
+    chmod -R ug+rwX storage bootstrap/cache
+
     echo "--- git ---"
     git fetch origin main
     git reset --hard origin/main
