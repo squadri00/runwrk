@@ -45,6 +45,7 @@
         <p id="notify-text">Turn on notifications to hear about our offers and updates, straight on your phone.</p>
         <button id="notify-on" hidden>Turn on notifications</button>
         <button id="notify-off" class="secondary" hidden>Turn off notifications</button>
+        <button id="notify-test" class="secondary" style="margin-top:10px" hidden>Send me a test notification</button>
         <p class="note" id="notify-note" hidden></p>
     </section>
 
@@ -88,14 +89,14 @@
 
     function render() {
         return R.state().then(function (s) {
-            show('notify-on', false); show('notify-off', false); show('ios-guide', false); show('install-card', false); note('');
+            show('notify-on', false); show('notify-off', false); show('notify-test', false); show('ios-guide', false); show('install-card', false); note('');
 
             if (s.ios && !s.standalone) { show('ios-guide', true); $('notify-text').textContent = 'To get notifications on iPhone, add this app to your home screen first.'; return; }
             if (!s.supported) { $('notify-text').textContent = 'Notifications are not available in this browser.'; return; }
 
             if (s.subscribed) {
                 $('notify-text').innerHTML = '<span class="ok">Notifications are on.</span> You will hear about our latest offers.';
-                show('notify-off', true);
+                show('notify-off', true); show('notify-test', true);
             } else if (s.permission === 'denied') {
                 $('notify-text').textContent = 'Notifications are blocked for this app. Turn them on in your phone or browser settings, then come back.';
             } else {
@@ -121,6 +122,16 @@
         });
     };
     $('notify-off').onclick = function () { R.unsubscribe().then(render); };
+    var gotTest = false;
+    R.onReceived(function (m) { if (m.test) { gotTest = true; note('Your phone received the test notification.'); } });
+    $('notify-test').onclick = function () {
+        gotTest = false; note('Sending a test...');
+        R.serverTest().then(function (r) {
+            if (!r.accepted) { note('The test was not accepted (' + String(r.reason || 'unknown') + ').'); return; }
+            note('Test sent. It should appear in a few seconds.');
+            setTimeout(function () { if (!gotTest) { note('Sent, but your phone did not confirm it. Check Do Not Disturb, battery saver and Chrome notification settings.'); } }, 15000);
+        }, function (e) { note('Could not send the test: ' + String(e && e.message || e).slice(0, 100)); });
+    };
     $('install-btn').onclick = function () { R.install().then(render); };
     window.addEventListener('beforeinstallprompt', function () { setTimeout(render, 50); });
     window.addEventListener('appinstalled', render);

@@ -30,7 +30,7 @@ Route::get('your-app', [SiteController::class, 'yourApp'])->name('your-app');
 Route::get('pricing', [SiteController::class, 'pricing'])->name('pricing');
 Route::get('demo', [SiteController::class, 'demo'])->name('demo');
 Route::get('contact', [SiteController::class, 'contact'])->name('contact');
-Route::post('contact', [SiteController::class, 'sendContact'])->middleware('throttle:5,1')->name('contact.send');
+Route::post('contact', [SiteController::class, 'sendContact'])->middleware('throttle:5,1,contact')->name('contact.send');
 Route::get('privacy', [SiteController::class, 'privacy'])->name('privacy');
 Route::get('terms', [SiteController::class, 'terms'])->name('terms');
 Route::get('sitemap.xml', [SiteController::class, 'sitemap'])->name('sitemap');
@@ -40,15 +40,15 @@ Route::middleware('guest:web')->group(function () {
     Route::post('login', [LoginController::class, 'store']);
 
     Route::get('register', [RegisterController::class, 'show'])->name('register');
-    Route::post('register', [RegisterController::class, 'store'])->middleware('throttle:10,1');
+    Route::post('register', [RegisterController::class, 'store'])->middleware('throttle:10,1,register');
     Route::get('register/verify/{token}', [RegistrationOtpController::class, 'show'])->name('register.verify');
-    Route::post('register/verify/{token}', [RegistrationOtpController::class, 'verify'])->middleware('throttle:10,1')->name('register.verify.submit');
-    Route::post('register/verify/{token}/resend', [RegistrationOtpController::class, 'resend'])->middleware('throttle:3,1')->name('register.verify.resend');
+    Route::post('register/verify/{token}', [RegistrationOtpController::class, 'verify'])->middleware('throttle:10,1,verify')->name('register.verify.submit');
+    Route::post('register/verify/{token}/resend', [RegistrationOtpController::class, 'resend'])->middleware('throttle:3,1,resend')->name('register.verify.resend');
 
     Route::get('password/forgot', [PasswordResetController::class, 'request'])->name('password.request');
-    Route::post('password/forgot', [PasswordResetController::class, 'email'])->middleware('throttle:5,1')->name('password.email');
+    Route::post('password/forgot', [PasswordResetController::class, 'email'])->middleware('throttle:5,1,pwforgot')->name('password.email');
     Route::get('password/reset/{token}', [PasswordResetController::class, 'reset'])->name('password.reset');
-    Route::post('password/reset', [PasswordResetController::class, 'update'])->middleware('throttle:10,1')->name('password.update');
+    Route::post('password/reset', [PasswordResetController::class, 'update'])->middleware('throttle:10,1,pwreset')->name('password.update');
 });
 
 Route::post('logout', [LoginController::class, 'destroy'])->middleware('auth:web')->name('logout');
@@ -58,7 +58,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('login', [AdminAuthController::class, 'show'])->name('login');
         Route::post('login', [AdminAuthController::class, 'login']);
         Route::get('two-factor', [TwoFactorChallengeController::class, 'show'])->name('2fa');
-        Route::post('two-factor', [TwoFactorChallengeController::class, 'verify'])->middleware('throttle:10,1');
+        Route::post('two-factor', [TwoFactorChallengeController::class, 'verify'])->middleware('throttle:10,1,admin2fa');
     });
 
     Route::middleware('auth:superadmin')->group(function () {
@@ -88,7 +88,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         Route::get('settings', [SettingsController::class, 'edit'])->name('settings.edit');
         Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
-        Route::post('settings/test-mail', [SettingsController::class, 'testMail'])->middleware('throttle:5,1')->name('settings.test-mail');
+        Route::post('settings/test-mail', [SettingsController::class, 'testMail'])->middleware('throttle:5,1,testmail')->name('settings.test-mail');
 
         Route::get('security', [SecurityController::class, 'show'])->name('security');
         Route::post('security/enable', [SecurityController::class, 'enable'])->name('security.enable');
@@ -106,7 +106,7 @@ Route::middleware(['auth:web', 'business'])->prefix('dashboard')->group(function
 
     Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::get('notifications/new', [NotificationController::class, 'create'])->name('notifications.create');
-    Route::post('notifications', [NotificationController::class, 'store'])->middleware('throttle:30,1')->name('notifications.store');
+    Route::post('notifications', [NotificationController::class, 'store'])->middleware('throttle:30,1,sendpush')->name('notifications.store');
     Route::get('notifications/{id}', [NotificationController::class, 'show'])->whereNumber('id')->name('notifications.show');
     Route::post('notifications/{id}/cancel', [NotificationController::class, 'cancel'])->whereNumber('id')->name('notifications.cancel');
     Route::get('subscribers', [SubscriberController::class, 'index'])->name('subscribers.index');

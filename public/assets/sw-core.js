@@ -15,7 +15,30 @@ self.addEventListener('push', function (event) {
         data: { url: data.url, msg: data.msg, api: data.api, key: data.key }
     };
 
-    event.waitUntil(self.registration.showNotification(data.title || 'New message', options));
+    function report(body) {
+        if (!data.api || !data.key) { return Promise.resolve(); }
+        return fetch(data.api + '/received', {
+            method: 'POST',
+            keepalive: true,
+            headers: { 'Content-Type': 'application/json', 'X-Runwrk-Key': data.key },
+            body: JSON.stringify(body)
+        }).catch(function () {});
+    }
+
+    function tellPages(message) {
+        return self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (list) {
+            list.forEach(function (c) { c.postMessage(message); });
+        }).catch(function () {});
+    }
+
+    // The phone confirms back that the message really arrived and was shown (or says why it could not be shown).
+    var shown = self.registration.showNotification(data.title || 'New message', options).then(function () {
+        return Promise.all([tellPages({ type: 'runwrk-received', msg: data.msg || 0, test: !!data.test }), data.msg ? report({ message: data.msg }) : Promise.resolve()]);
+    }, function (err) {
+        return report({ message: data.msg || 0, error: String(err && err.message || err).slice(0, 180) });
+    });
+
+    event.waitUntil(shown);
 });
 
 self.addEventListener('notificationclick', function (event) {

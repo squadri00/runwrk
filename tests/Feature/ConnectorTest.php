@@ -201,6 +201,12 @@ class ConnectorTest extends TestCase
         $this->assertTrue($r['offlineHtml']);
         $this->assertSame(['Flash sale', 'Half price', 'm7', '/sale'], array_values($r['pushShown']));
         $this->assertTrue($r['badPayloadStillNotifies']);
+        $this->assertTrue($r["receipt"]["sent"] && $r["receipt"]["keepalive"] && $r["receipt"]["hasKey"], "the phone must confirm back that a message arrived");
+        $this->assertSame("{\"message\":7}", $r["receipt"]["body"]);
+        $this->assertSame(["type" => "runwrk-received", "msg" => 7, "test" => false], $r["pageTold"]);
+        $this->assertTrue($r["testPush"]["pageTold"]["test"]);
+        $this->assertFalse($r["testPush"]["countedOnServer"], "test pushes must not be counted as real deliveries");
+        $this->assertSame(["message" => 8, "error" => "notifications are blocked by the device"], $r["displayFailureReported"]);
         $this->assertSame('https://joes.com/sale', $r['click']['openedUrl']);
         $this->assertTrue($r['click']['reported'] && $r['click']['keepalive'] && $r['click']['hasKeyHeader']);
         $this->assertSame('{"message":7}', $r['click']['body']);

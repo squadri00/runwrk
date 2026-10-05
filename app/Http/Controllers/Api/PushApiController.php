@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Domain\Api\OriginChecker;
+use App\Domain\Push\PushTransport;
 use App\Domain\Tenancy\CurrentBusiness;
 use App\Http\Controllers\Controller;
 use App\Models\PushMessage;
@@ -40,6 +41,54 @@ class PushApiController extends Controller
         }
 
         return response()->json($manifests->forSite($business, $site), 200, ['Content-Type' => 'application/manifest+json', 'Cache-Control' => 'public, max-age=300']);
+    }
+
+    /** The phone confirms a message really arrived (or says why it could not be shown). */
+    public function received(Request $request, CurrentBusiness $current)
+    {
+        $data = $request->validate(['message' => 'nullable|integer|min:0', 'error' => 'nullable|string|max:200']);
+
+        if (! empty($data['message'])) {
+            PushMessage::whereKey($data['message'])->increment('received_count');
+        }
+
+        if (! empty($data['error'])) {
+            \Log::warning('Runwrk: a phone could not show a notification', ['business' => $current->id(), 'message' => $data['message'] ?? null, 'error' => $data['error']]);
+        }
+
+        return ['ok' => true];
+    }
+
+    /** A subscriber asks for a test push to their own device (they must know their own endpoint). */
+    public function test(Request $request, CurrentBusiness $current, PushTransport $transport, ManifestBuilder $manifests)
+    {
+        $data = $request->validate(['endpoint' => 'required|url|max:2000']);
+        $business = $current->getOrFail();
+
+        $sub = PushSubscription::where('endpoint_hash', PushSubscription::hashEndpoint($data['endpoint']))->first();
+
+        if (! $sub) {
+            return response()->json(['ok' => false, 'error' => 'not_subscribed'], 404);
+        }
+
+        $base = rtrim(config('app.url'), '/');
+        $result = $transport->send(collect([$sub]), [
+            'title' => 'Test from '.$business->name,
+            'body' => 'If you can read this, notifications reach this device.',
+            'icon' => $manifests->iconBase($business).'icon-192.png',
+            'badge' => $base.'/assets/icons/badge.png',
+            'url' => $business->website_url ?: $base.'/'.$business->slug,
+            'tag' => 'runwrk-test',
+            'test' => true,
+            'api' => $base.'/api/v1',
+            'key' => $business->public_key,
+        ], 600)[$sub->id] ?? ['ok' => false, 'expired' => false, 'reason' => 'no result'];
+
+        if ($result['expired']) {
+            $sub->delete();
+        }
+
+        return ['ok' => true, 'accepted' => $result['ok'], 'expired' => $result['expired'], 'reason' => $result['reason']];
     }
 
     public function subscribe(Request $request, CurrentBusiness $current)

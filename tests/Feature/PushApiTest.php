@@ -136,6 +136,74 @@ class PushApiTest extends TestCase
         $this->assertSame(0, $theirs->fresh()->click_count);
     }
 
+    public function test_phone_receipts_count_only_the_calling_businesss_message(): void
+    {
+        $mine = app(CurrentBusiness::class)->run($this->a, fn () => PushMessage::create(['title' => 't', 'body' => 'b']));
+        $theirs = app(CurrentBusiness::class)->run($this->b, fn () => PushMessage::create(['title' => 't', 'body' => 'b']));
+
+        $this->api($this->a, 'received', ['message' => $mine->id])->assertOk();
+        $this->api($this->a, 'received', ['message' => $mine->id])->assertOk();
+        $this->api($this->a, 'received', ['message' => $theirs->id])->assertOk();
+        $this->api($this->a, 'received', ['message' => 0])->assertOk();
+
+        $this->assertSame(2, $mine->fresh()->received_count);
+        $this->assertSame(0, $theirs->fresh()->received_count);
+    }
+
+    public function test_a_phone_that_cannot_show_a_notification_is_logged_with_the_reason(): void
+    {
+        \Log::spy();
+
+        $this->api($this->a, 'received', ['message' => 0, 'error' => 'notifications are blocked by the device'])->assertOk();
+
+        \Log::shouldHaveReceived('warning')->withArgs(fn ($m, $ctx) => str_contains($m, 'could not show') && $ctx['error'] === 'notifications are blocked by the device')->once();
+    }
+
+    public function test_a_subscriber_can_send_a_test_to_their_own_device_only(): void
+    {
+        $fake = new \Tests\Support\FakeTransport;
+        $this->app->instance(\App\Domain\Push\PushTransport::class, $fake);
+        $this->api($this->a, 'subscribe', $this->sub());
+        $mineId = PushSubscription::withoutBusinessScope()->value('id');
+
+        $res = $this->api($this->a, 'test', ['endpoint' => $this->sub()['endpoint']])->assertOk();
+        $this->assertTrue($res->json('accepted'));
+        $this->assertSame([$mineId], $fake->sentIds());
+        $this->assertTrue($fake->calls[0]['payload']['test']);
+        $this->assertArrayNotHasKey('msg', $fake->calls[0]['payload'], 'a test must not count as a real message');
+
+        // another business cannot trigger a test to this device, and unknown devices get 404
+        $this->api($this->b, 'test', ['endpoint' => $this->sub()['endpoint']])->assertStatus(404);
+        $this->api($this->a, 'test', ['endpoint' => 'https://fcm.googleapis.com/fcm/send/unknown'])->assertStatus(404);
+        $this->assertCount(1, $fake->calls);
+    }
+
+    public function test_a_test_to_a_dead_device_removes_it_and_says_so(): void
+    {
+        $fake = new \Tests\Support\FakeTransport;
+        $this->app->instance(\App\Domain\Push\PushTransport::class, $fake);
+        $this->api($this->a, 'subscribe', $this->sub());
+        $id = PushSubscription::withoutBusinessScope()->value('id');
+        $fake->results[$id] = ['ok' => false, 'expired' => true, 'reason' => 'Gone'];
+
+        $res = $this->api($this->a, 'test', ['endpoint' => $this->sub()['endpoint']])->assertOk();
+
+        $this->assertFalse($res->json('accepted'));
+        $this->assertTrue($res->json('expired'));
+        $this->assertSame(0, $this->subCount($this->a));
+    }
+
+    public function test_test_messages_are_rate_limited(): void
+    {
+        $this->app->instance(\App\Domain\Push\PushTransport::class, new \Tests\Support\FakeTransport);
+        $this->api($this->a, 'subscribe', $this->sub());
+
+        foreach (range(1, 4) as $i) {
+            $this->api($this->a, 'test', ['endpoint' => $this->sub()['endpoint']])->assertOk();
+        }
+        $this->api($this->a, 'test', ['endpoint' => $this->sub()['endpoint']])->assertStatus(429);
+    }
+
     public function test_config_returns_the_public_vapid_key_only(): void
     {
         config(['runwrk.vapid.private' => 'SECRET-PRIVATE']);

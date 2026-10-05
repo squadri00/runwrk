@@ -102,6 +102,28 @@
                 throw e;
             });
         },
+        // ---- test tools (help a customer find out why a notification does not show) ----
+        onReceived: function (cb) {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.addEventListener('message', function (e) { if (e.data && e.data.type === 'runwrk-received') { cb(e.data); } });
+            }
+        },
+        // A notification created right here on the device, without any push message. Tells you if the phone can show notifications at all.
+        localTest: function () {
+            return navigator.serviceWorker.getRegistration(cfg.scope).then(function (reg) {
+                if (!reg) { throw new Error('no worker'); }
+                return reg.showNotification('Local test', { body: 'This notification was made on your phone, with no message from the internet. If you can see it, your phone can show notifications.', tag: 'runwrk-local-test' });
+            });
+        },
+        // A real push message sent to just this device.
+        serverTest: function () {
+            return navigator.serviceWorker.getRegistration(cfg.scope).then(function (reg) {
+                return reg ? reg.pushManager.getSubscription() : null;
+            }).then(function (sub) {
+                if (!sub) { throw new Error('not subscribed'); }
+                return api('/test', { endpoint: sub.endpoint });
+            });
+        },
         unsubscribe: function () {
             return navigator.serviceWorker.getRegistration(cfg.scope).then(function (reg) {
                 return reg ? reg.pushManager.getSubscription() : null;

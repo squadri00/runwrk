@@ -102,7 +102,9 @@
             if (s.ios && !standalone) {
                 html += '<p>Add our app to your iPhone, then turn on messages:</p><ol><li>Tap the <b>Share</b> button in Safari.</li><li>Tap <b>Add to Home Screen</b>.</li><li>Open the app from your home screen.</li><li>Tap <b>Turn on notifications</b>.</li></ol>';
             } else if (s.subscribed) {
-                html += '<p class="ok">Notifications are on.</p><p>You will hear about our latest news and offers.</p><button class="btn alt" id="off">Turn off notifications</button>';
+                html += '<p class="ok">Notifications are on.</p><p>You will hear about our latest news and offers.</p><button class="btn alt" id="off">Turn off notifications</button>'
+                    + '<p class="note"><a href="#" id="tt" style="color:inherit">Not getting messages? Test this phone</a></p>'
+                    + '<div id="tools" hidden><button class="btn alt" id="t1">Test 1: show a notification made on this phone</button><button class="btn alt" id="t2">Test 2: send a message to this phone</button></div>';
             } else if (s.permission === 'denied') {
                 html += '<p>Notifications are blocked for this site. Turn them on in your browser settings, then come back.</p>';
             } else {
@@ -119,8 +121,29 @@
             if ($('c')) { $('c').onclick = function () { setOpen(false); try { localStorage.setItem(DISMISS, String(Date.now())); } catch (e) {} refresh(); }; }
             if ($('on')) { $('on').onclick = function () { var b = this; b.disabled = true; R.subscribe().then(null, function (e) { return e; }).then(function (err) { return refresh().then(function () { if (err) { var m = panel.querySelector('#msg'); if (m) { m.textContent = err.message === 'denied' ? 'You chose not to allow notifications.' : 'Something went wrong. Please try again. (' + (err.step || '?') + ': ' + String(err.name || '') + ' ' + String(err.message || '').slice(0, 110) + ')'; m.hidden = false; } } }); }); }; }
             if ($('off')) { $('off').onclick = function () { R.unsubscribe().then(refresh); }; }
+            if ($('tt')) { $('tt').onclick = function (e) { e.preventDefault(); $('tools').hidden = !$('tools').hidden; }; }
+            if ($('t1')) {
+                $('t1').onclick = function () {
+                    R.localTest().then(function () { say('Test 1 sent. Look at the top of your screen or pull down the notification shade. If you saw "Local test", your phone CAN show notifications.'); },
+                        function (e) { say('Test 1 failed: ' + String(e && e.message || e).slice(0, 120)); });
+                };
+            }
+            if ($('t2')) {
+                $('t2').onclick = function () {
+                    gotTest = false; say('Sending a test message...');
+                    R.serverTest().then(function (r) {
+                        if (!r.accepted) { say('Google did not accept the test (' + String(r.reason || 'unknown') + (r.expired ? ', this phone was signed out, turn notifications on again' : '') + ').'); return; }
+                        say('Google accepted it. Waiting up to 15 seconds for your phone to confirm...');
+                        setTimeout(function () { if (!gotTest) { say('Google accepted the message, but your phone never confirmed it. If Test 1 worked, the phone is not receiving internet messages: check battery saver, Do Not Disturb and that Chrome may run in the background.'); } }, 15000);
+                    }, function (e) { say('Test 2 could not be sent: ' + String(e && e.message || e).slice(0, 120)); });
+                };
+            }
             if ($('inst')) { $('inst').onclick = function () { R.install().then(refresh); }; }
         }
+
+        var gotTest = false;
+        function say(text) { var m = panel.querySelector('#msg'); if (m) { m.textContent = text; m.hidden = false; } }
+        R.onReceived(function (m) { if (m.test) { gotTest = true; say('Test 2 worked: your phone received the message.'); } });
 
         function setOpen(open) { panel.classList.toggle('open', open); fab.setAttribute('aria-expanded', open); }
 

@@ -172,6 +172,7 @@ class NotificationsUiTest extends TestCase
         }
 
         $this->get('/dashboard/subscribers')->assertSee('Latest sign-ups');
+        $this->get("/dashboard/notifications/{$m->id}")->assertSee('Reached a phone')->assertSee('Not sent');
     }
 
     public function test_guests_are_sent_to_login(): void
